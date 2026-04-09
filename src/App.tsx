@@ -6,16 +6,15 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { Home } from './components/Home';
 import { ProfileSelection } from './components/ProfileSelection';
 import { Measurements } from './components/Measurements';
 import { Summary } from './components/Summary';
 import { RoofingProfile } from './constants';
 
-type Page = 'home' | 'profiles' | 'measurements' | 'summary';
+type Page = 'profiles' | 'measurements' | 'summary';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [currentPage, setCurrentPage] = useState<Page>('profiles');
   const [selectedProfile, setSelectedProfile] = useState<RoofingProfile | null>(null);
   const [measurementData, setMeasurementData] = useState<any>(null);
 
@@ -41,10 +40,6 @@ export default function App() {
       <Navbar currentPage={currentPage} onNavigate={handleNavigate} />
       
       <main className="flex-grow">
-        {currentPage === 'home' && (
-          <Home onStart={() => handleNavigate('profiles')} />
-        )}
-        
         {currentPage === 'profiles' && (
           <ProfileSelection onSelect={handleProfileSelect} />
         )}
