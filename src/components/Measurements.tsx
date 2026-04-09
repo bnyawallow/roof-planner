@@ -19,9 +19,8 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
   const estimatedSheets = Math.ceil(sqm / 2.4); // Mock calculation
 
   return (
-    <div className="pt-28 pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
+    <div className="pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
       <header className="mb-12">
-        <span className="text-secondary-container tech-label mb-4 block">Section 02 — Measurements</span>
         <h1 className="font-headline text-4xl md:text-5xl font-black tracking-[-0.02em] text-primary-container leading-tight">Geometry &<br/>Dimensions</h1>
         <p className="mt-6 text-on-surface-variant max-w-2xl text-lg leading-relaxed font-sans">
           Precision is the foundation of structural integrity. Enter your roof baseline dimensions below to calculate the exact load requirements and sheet distribution.
@@ -140,8 +139,7 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
               <div className="pt-8 flex justify-between items-center relative">
                 <div className="absolute top-0 left-0 w-full h-1 bg-white/10 rounded-sm"></div>
                 <div className="mt-4">
-                  <span className="block tech-label opacity-40">Estimated Sheets</span>
-                  <span className="text-xl font-bold font-headline">{estimatedSheets} Units</span>
+                  <div className="text-xl font-bold font-headline">{estimatedSheets} Units</div>
                 </div>
                 <button 
                   onClick={() => onComplete({ sqm, estimatedSheets, thickness, sheetLength, length, width })}
@@ -150,26 +148,6 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                   Generate Estimate
                   <CheckCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 </button>
-              </div>
-            </div>
-
-            <div className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-ambient">
-              <div className="p-6 flex justify-between items-center bg-surface-container-low">
-                <span className="font-bold text-primary-container flex items-center gap-2 font-sans">
-                  <Ruler className="w-5 h-5" />
-                  Plan View 01
-                </span>
-                <span className="tech-label text-on-surface-variant">Scale 1:100</span>
-              </div>
-              <div className="h-64 blueprint-grid flex items-center justify-center relative">
-                <div className="w-48 h-32 border-4 border-primary-fixed-dim relative">
-                  <div className="absolute inset-0 border-2 border-primary-container flex items-center justify-center">
-                    <div className="w-full h-1 bg-secondary-container absolute top-1/2"></div>
-                    <div className="h-full w-1 bg-secondary-container absolute left-1/2"></div>
-                  </div>
-                  <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 tech-label text-on-surface-variant">{length}M</span>
-                  <span className="absolute -left-10 top-1/2 -translate-y-1/2 tech-label text-on-surface-variant -rotate-90">{width}M</span>
-                </div>
               </div>
             </div>
           </div>

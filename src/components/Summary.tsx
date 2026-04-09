@@ -138,7 +138,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
   };
 
   return (
-    <div className="pt-28 pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
+    <div className="pt-12 pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
       <header className="mb-12">
         <h1 className="font-headline font-black text-4xl md:text-5xl tracking-[-0.02em] text-primary-container mb-4">Estimate Summary</h1>
         <p className="text-on-surface-variant max-w-2xl font-sans text-lg">Your roofing project precision-calculated based on architectural specifications for lasting durability.</p>
@@ -150,14 +150,14 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
             <div className="absolute top-0 right-0 w-32 h-32 bg-secondary-container/5 rounded-bl-full"></div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
               <div className="flex flex-col">
-                <span className="tech-label text-on-surface-variant mb-2">Total Area</span>
+                <div className="text-on-surface-variant mb-2">Total Area</div>
                 <div className="flex items-baseline gap-1">
                   <span className="font-headline font-black text-4xl text-primary-container tracking-[-0.02em]">{data.sqm.toFixed(1)}</span>
                   <span className="font-headline font-bold text-xl text-on-surface-variant/50">SQM</span>
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="tech-label text-on-surface-variant mb-2">Roofing Sheets</span>
+                <div className="text-on-surface-variant mb-2">Roofing Sheets</div>
                 <div className="flex items-baseline gap-1">
                   <span className="font-headline font-black text-4xl text-secondary-container tracking-[-0.02em]">{data.estimatedSheets}</span>
                   <span className="text-xs font-bold text-on-surface-variant/50 uppercase">PCS</span>
@@ -165,7 +165,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
                 <span className="text-[10px] text-on-surface-variant mt-1 font-medium italic font-sans">Calculated: {data.sheetLength} Length / 0.8 Effective Cover</span>
               </div>
               <div className="flex flex-col">
-                <span className="tech-label text-on-surface-variant mb-2">Est. Nails/Fixings</span>
+                <div className="text-on-surface-variant mb-2">Est. Nails/Fixings</div>
                 <div className="flex items-baseline gap-1">
                   <span className="font-headline font-black text-4xl text-primary-container tracking-[-0.02em]">{(data.estimatedSheets * 12).toLocaleString()}</span>
                   <span className="text-xs font-bold text-on-surface-variant/50 uppercase">Units</span>
@@ -177,7 +177,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
           <div className="bg-surface-container-low rounded-xl p-8">
             <div className="flex justify-between items-end mb-8">
               <h2 className="font-headline font-extrabold text-2xl tracking-[-0.02em]">Technical Breakdown</h2>
-              <span className="tech-label text-secondary-container bg-surface-container-highest px-2 py-1 rounded-sm">Architectural Grade</span>
+              <div className="text-secondary-container bg-surface-container-highest px-2 py-1 rounded-sm">Architectural Grade</div>
             </div>
             <div className="space-y-6">
               <div className="flex justify-between items-center bg-surface-container-lowest p-6 rounded-sm transition-all hover:translate-x-1 shadow-ambient">
@@ -192,7 +192,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
                 </div>
                 <div className="text-right">
                   <span className="block font-headline font-bold text-lg text-primary-container tracking-[-0.02em]">KES 1,250</span>
-                  <span className="tech-label text-on-surface-variant/50">Per SQM</span>
+                  <div className="text-on-surface-variant/50">Per SQM</div>
                 </div>
               </div>
 
@@ -208,7 +208,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
                 </div>
                 <div className="text-right">
                   <span className="block font-headline font-bold text-lg text-primary-container tracking-[-0.02em]">KES 8,550</span>
-                  <span className="tech-label text-on-surface-variant/50">Estimated Total</span>
+                  <div className="text-on-surface-variant/50">Estimated Total</div>
                 </div>
               </div>
             </div>
@@ -218,7 +218,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
         <div className="md:col-span-4 flex flex-col gap-6">
           <div className="hero-gradient text-white p-8 rounded-xl relative overflow-hidden flex flex-col h-full shadow-ambient">
             <div className="relative z-10">
-              <span className="tech-label text-white/60 mb-6 block">Direct Assistance</span>
+              <div className="text-white/60 mb-6 block">Direct Assistance</div>
               <h3 className="font-headline font-black text-3xl tracking-[-0.02em] mb-4">Consult with our Technical Lead</h3>
               <p className="text-white/80 mb-8 leading-relaxed font-sans">Book a comprehensive <strong>site assessment</strong> and ensure <strong>professional installation</strong> by speaking directly with our technical lead.</p>
               <button className="bg-whatsapp-green w-full py-4 rounded-md flex items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-[#20bd5a] active:scale-95 shadow-ambient group">
@@ -228,7 +228,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
             </div>
             <div className="mt-auto pt-12">
               <div className="border-l-4 border-secondary-container pl-6">
-                <span className="tech-label text-white/60">Nairobi HQ</span>
+                <div className="text-white/60">Nairobi HQ</div>
                 <div className="not-italic text-sm text-white space-y-1 mt-2 font-sans">
                   <p className="font-bold">Industrial Area</p>
                   <p>sales@pinnacleroofing.co.ke</p>
@@ -244,36 +244,12 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
           >
             <div className="flex items-center gap-3">
               <FileText className="w-6 h-6 text-primary-container" />
-              <span className="font-headline font-bold tracking-[-0.02em]">Download Full Report</span>
+              <span className="font-headline font-bold tracking-[-0.02em]">Download PDF Summary</span>
             </div>
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
           </button>
         </div>
       </div>
-
-      <section className="mt-24">
-        <div className="flex justify-between items-center mb-10">
-          <h2 className="font-headline font-black text-3xl tracking-[-0.02em]">Installed Examples</h2>
-          <button className="text-primary-container font-headline font-bold text-sm underline underline-offset-4">View All Projects</button>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuAcGV-ciCqSMpBTdy0y6rIAhgrtVIFkE6-zP0OOjenAPRY0GFfG4BY-gef_OC3cy4BRUda4omDvjuss9nU_ZEgQeMBofgkxvdxFVa6w8aDtlxRzl2fNTGQbgCHClnsk5Fe1kF-ttxp7_DR2aOwdWkagbBr_tz17hlezCjMqSEjkxUH0-O-WGeBWhWmIIrtPC3SKEnO0tsDsWqJJDR3b8BGuseiGrab5hW2ufzjDnvtJwLhj2hhHFJ1MRHgU82i9f0oIHw6wgU-z3MY",
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuBqztcEh3r08BUqA8UG9JuJIKvXczvTOlEnzbCibLy9qODPRG5zTJv8U-S3lT0JEoT7nTyniDkwpPNfZ8mrAhtXV4TPOmdjs1TYQRyCWvZI7Tzwm54ungWaTNrVkD4LBv7RuJG38cP9-h-JgZJvFa3XZRLL6_qmcXrM19adCxx6FqPrsSHIRLeY2z1CCc5ilxgmVcVTW-x_izcGFEN-uzp74ApCgJ0GxXN3ty2h74kEZ4DvI1T_a60jzCiZQDvusJw3xROW6K9VDmI",
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuCWo856zTA4UfUZlwVwywZEZeFfSlVI8m9ZxOBvEmD1k6IcPhXElgx4Kqb3oppychuyPXxZqc6W4gLuCb66l9jWcbp05HYWRXKhueparWsN5aqKoJtdbBR9P1k239V7kBcCLNkyTFvsiTKZYpu6B2OK5mTBJ5Qd-SpYphJpF49NLwzOCE3cJQ6DaMhgZWQjNrhDpQebvUFmc8_49iRwMZWuKWfo2CANnEHSi9q_5kLHo_k4CWLL5pF8zNnvEcPTWQE4iu_pR1rewig",
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuBLftsEDbpbJw1xQyldQhbaKdW_hKlphhLACzVM7t7cdYwV01BHCgkRRKZxnZCLbTQLUuEBF8diSJnJU4DmGFbT3UHG6F5_3WXN_cM-Z0yuq7p-MGmIGL1F245v8Lmp-y6m_iRULEgIKVWfZs2RaY_jw0lI4IxdVrO1FdqycBBJLLHabH26nfgi9bCfn5we-KKJgLhwPoQIV71leLjk8M1ylrWvQbDIxMQi3G6d77JQ5IaeiqHb3i7gLX3AMPOw95heMUM9-GyVUlU"
-          ].map((src, i) => (
-            <div key={i} className="aspect-square bg-surface-container-low rounded-xl overflow-hidden group shadow-ambient">
-              <img 
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100" 
-                src={src}
-                alt={`Installed Example ${i + 1}`}
-                referrerPolicy="no-referrer"
-              />
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };

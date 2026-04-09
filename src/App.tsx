@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { StepIndicator } from './components/StepIndicator';
 import { ProfileSelection } from './components/ProfileSelection';
 import { Measurements } from './components/Measurements';
 import { Summary } from './components/Summary';
@@ -38,6 +39,12 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar currentPage={currentPage} onNavigate={handleNavigate} />
+      <StepIndicator 
+        currentPage={currentPage} 
+        onNavigate={handleNavigate}
+        selectedProfile={!!selectedProfile}
+        measurementData={!!measurementData}
+      />
       
       <main className="flex-grow">
         {currentPage === 'profiles' && (

@@ -9,12 +9,8 @@ interface ProfileSelectionProps {
 
 export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) => {
   return (
-    <div className="pt-28 pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
+    <div className="pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
       <header className="mb-16">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="h-1 w-12 bg-secondary-container rounded-full"></div>
-          <span className="tech-label text-on-surface-variant">Step 01: Profile Selection</span>
-        </div>
         <h1 className="font-headline text-4xl md:text-5xl font-extrabold tracking-[-0.02em] text-primary-container max-w-4xl leading-[1.1]">
           Select Your <br/><span className="text-secondary-container">Roofing Profile</span>
         </h1>
@@ -42,7 +38,6 @@ export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary-container/80 to-transparent"></div>
               <div className="absolute bottom-4 left-6">
-                <span className="text-white/80 tech-label">{profile.category || 'Pinnacle'}</span>
                 <h3 className="text-white text-2xl font-black font-headline leading-tight tracking-[-0.02em]">{profile.title}</h3>
               </div>
             </div>
