@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-headline: "Work Sans", sans-serif;
+  
+  --color-primary-container: #121a34;
+  --color-secondary-container: #fe6a34;
+  --color-surface: #f8f9ff;
+  --color-surface-container-low: #eff4ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #dce9ff;
+  --color-surface-container-highest: #d3e4fe;
+  --color-on-surface-variant: #45464d;
+  --color-inverse-surface: #213145;
+  --color-inverse-on-surface: #ffffff;
+  --color-whatsapp-green: #25D366;
+  --color-primary-fixed-dim: #bec5e7;
+
+  --shadow-ambient: 0 20px 40px rgba(11, 28, 48, 0.06);
+}
+
+@layer base {
+  body {
+    @apply bg-surface font-sans text-slate-900 antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline tracking-[-0.02em];
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-surface/80 backdrop-blur-[20px];
+  }
+  
+  .tech-label {
+    @apply text-[0.75rem] uppercase tracking-[0.05em] font-bold;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, var(--color-primary-container) 0%, #1e2b58 100%);
+  }
+}
+
+.blueprint-grid {
+  background-image: radial-gradient(#d3e4fe 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
