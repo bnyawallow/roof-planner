@@ -15,7 +15,7 @@ export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) 
           <div className="h-1 w-12 bg-secondary-container rounded-full"></div>
           <span className="tech-label text-on-surface-variant">Step 01: Profile Selection</span>
         </div>
-        <h1 className="font-headline text-5xl md:text-7xl font-extrabold tracking-[-0.02em] text-primary-container max-w-4xl leading-[0.9]">
+        <h1 className="font-headline text-4xl md:text-5xl font-extrabold tracking-[-0.02em] text-primary-container max-w-4xl leading-[1.1]">
           Select Your <br/><span className="text-secondary-container">Roofing Profile</span>
         </h1>
         <p className="mt-8 text-on-surface-variant text-lg max-w-2xl font-medium leading-relaxed font-sans">

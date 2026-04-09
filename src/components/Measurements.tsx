@@ -22,7 +22,7 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
     <div className="pt-28 pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
       <header className="mb-12">
         <span className="text-secondary-container tech-label mb-4 block">Section 02 — Measurements</span>
-        <h1 className="font-headline text-5xl md:text-7xl font-black tracking-[-0.02em] text-primary-container leading-none">Geometry &<br/>Dimensions</h1>
+        <h1 className="font-headline text-4xl md:text-5xl font-black tracking-[-0.02em] text-primary-container leading-tight">Geometry &<br/>Dimensions</h1>
         <p className="mt-6 text-on-surface-variant max-w-2xl text-lg leading-relaxed font-sans">
           Precision is the foundation of structural integrity. Enter your roof baseline dimensions below to calculate the exact load requirements and sheet distribution.
         </p>

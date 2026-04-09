@@ -140,7 +140,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
   return (
     <div className="pt-28 pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
       <header className="mb-12">
-        <h1 className="font-headline font-black text-5xl md:text-6xl tracking-[-0.02em] text-primary-container mb-4">Estimate Summary</h1>
+        <h1 className="font-headline font-black text-4xl md:text-5xl tracking-[-0.02em] text-primary-container mb-4">Estimate Summary</h1>
         <p className="text-on-surface-variant max-w-2xl font-sans text-lg">Your roofing project precision-calculated based on architectural specifications for lasting durability.</p>
       </header>
 
