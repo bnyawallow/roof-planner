@@ -49,7 +49,7 @@ export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) 
             <div className="p-6 flex flex-col flex-grow">
               <p className="text-on-surface-variant text-sm font-medium mb-6 font-sans">{profile.description}</p>
               <div className="mt-auto flex justify-between items-center">
-                <span className="text-secondary-container font-black text-sm uppercase tracking-tighter">View Specs</span>
+                <span className="text-secondary-container font-black text-sm uppercase tracking-tighter">Select Profile</span>
                 <div className="bg-surface-container-low p-2 rounded-sm group-hover:bg-secondary-container group-hover:text-white transition-colors">
                   <ArrowRight className="w-4 h-4" />
                 </div>
@@ -58,40 +58,6 @@ export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) 
           </motion.div>
         ))}
       </div>
-
-      <section className="mt-20 hero-gradient rounded-xl p-8 md:p-12 relative overflow-hidden shadow-ambient">
-        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-white/5 to-transparent pointer-events-none"></div>
-        <div className="relative z-10 grid md:grid-cols-2 items-center gap-12">
-          <div>
-            <h2 className="font-headline text-3xl md:text-5xl font-bold text-white tracking-[-0.02em] leading-[1.1]">
-              Unsure which profile <br/>fits your project?
-            </h2>
-            <p className="mt-6 text-primary-fixed-dim text-lg font-sans">
-              Our structural engineers are ready to review your blueprints and suggest the optimal profile and gauge for your specific location.
-            </p>
-          </div>
-          <div className="flex flex-col md:items-end gap-6">
-            <div className="flex items-center gap-4 bg-white/5 p-4 rounded-sm border-none backdrop-blur-sm self-start md:self-auto shadow-ambient">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary-container">
-                <img 
-                  alt="Engineer" 
-                  className="w-full h-full object-cover" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVQkiyRnLoLcl-UpSm32HdEeAXXecu20HpdAZdt7A_Ae1fNYlzqSYKuXHVTvq2UnaYMLytm1t2Z_qduJx9_cdLJXYCboAKLCE1SmgH72kgasCUvJV4b1SihxKpWjCf9_wFS8TI1Gy1dDiGQEt5dFDW-V1F2U-puhF_xql_y5OxG1l4_NieCP6ALHKbYc_9_Kg9_cxW2CKwa2AZUISySmKBEtzEqLOnUYXU2ne-Al8gunq2lMw8ixpap0-sG57pzV6r9CjGvOLD5Bw"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div>
-                <p className="text-white font-bold font-sans">Eng. David K.</p>
-                <p className="text-primary-fixed-dim text-xs font-sans">Technical Support Specialist</p>
-              </div>
-            </div>
-            <button className="bg-whatsapp-green text-white flex items-center justify-center gap-3 px-10 py-5 rounded-md font-bold text-sm font-sans w-full md:w-auto shadow-ambient transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-[#20bd5a] active:scale-95 group">
-              <MessageSquare className="w-6 h-6 fill-current group-hover:scale-110 transition-transform" />
-              Talk to an Engineer
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

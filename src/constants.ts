@@ -12,11 +12,29 @@ export interface RoofingProfile {
 
 export const ROOFING_PROFILES: RoofingProfile[] = [
   {
+    id: "box-profile",
+    title: "Box Profile",
+    description: "High-precision angular ribs for superior load-bearing capacity.",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA3K8HWdu0_gkfiZyGFLdcXvc0cQIygbGSKfeCo2SHQ6jf4sqCmtslLqUv0H72CphC22d7x5_UFs2vI3C9Rf-HlufY9vZ-qa9zdXUv1wGSPw3trIXuHuGvw-y62Jk09Qi8qmwuYiKSCNHOLHtnaH5V1yrUNhILTVuGpRSL7O_nIKg7oGmaaWFTqXMOY_OifZ_a0u5huTYkMN9-Il43MDfYdEEmlMqj4DtGpHY1CLD5BQb_o4mT21vJM5W9vTYtT5B1WfHhqo9T4iaI",
+    category: "Pinnacle",
+    specs: {
+      effectiveWidth: "880mm",
+      gaugeRange: "28G - 32G"
+    }
+  },
+  {
     id: "classic-tile",
-    title: "Classic Tile",
-    description: "Symmetrical and beautiful, provides a prestigious look for high-end residential projects.",
+    title: "Tile Profile",
+    description: "Architectural elegance of traditional tiles with the durability of lightweight steel.",
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCw_qwO2CU5DUySCO4pIEJ6mT67mxZ0NG7GkjEVVYa-YFUg3Ee8TFT62TWYdeOoEqyP3evjZVhv1E3MxseVlTUgNwnrH2poRpfAT2MocWIh0qSODqGdJI-zRiTZ0d_ZeCKIV5L8vjZoUL2J3NPtjV1xKblykzGKUrYvf9ZATlUSZyOKf7EpihL6r-yRJrFKB5uBpc6OEx4BwPXJdxTIz8epOe5IuQViA7EX6qEWsZNm7BxkbHNmpGo1NyR3y3T56t6SJxV-rnO-LgU",
     category: "Pinnacle"
+  },
+  {
+    id: "corrugated-sheets",
+    title: "Corrugated",
+    description: "The classic, time-tested waveform for optimal drainage.",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAwjkB95aCIQS21D0gtGtIa159FliCkDrwwQ3I-yUMoNXqe7TE1hhJVp31Ys05lF-G5MjY1NvsPzG0cF_K8kCuF26vnttSKHBNdsCMAANhQDkEE8INrjbSzpzCLowvgMcDvV7fzJ1w2MjAfcZhT34ZGB4NNDKHdH0UNMJCtbEkYQVZh8tksmbpGJ9y362sVxtWtZemupSDYonpZGTz9tyTht1FQXPVXOX7NEVomZLswhBJqMZuFRpkGwqcSYoDdttTUfWR9EQyST_o",
+    category: "Colored"
   },
   {
     id: "ecospan-tile",
@@ -38,23 +56,5 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     description: "Premium, extremely durable with a natural stone look. The ultimate choice for longevity.",
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAVQkiyRnLoLcl-UpSm32HdEeAXXecu20HpdAZdt7A_Ae1fNYlzqSYKuXHVTvq2UnaYMLytm1t2Z_qduJx9_cdLJXYCboAKLCE1SmgH72kgasCUvJV4b1SihxKpWjCf9_wFS8TI1Gy1dDiGQEt5dFDW-V1F2U-puhF_xql_y5OxG1l4_NieCP6ALHKbYc_9_Kg9_cxW2CKwa2AZUISySmKBEtzEqLOnUYXU2ne-Al8gunq2lMw8ixpap0-sG57pzV6r9CjGvOLD5Bw",
     category: "Pinnacle"
-  },
-  {
-    id: "box-profile",
-    title: "Box Profile",
-    description: "Angular ribs for high strength. Ideal for industrial, commercial and modern residential roofing.",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA3K8HWdu0_gkfiZyGFLdcXvc0cQIygbGSKfeCo2SHQ6jf4sqCmtslLqUv0H72CphC22d7x5_UFs2vI3C9Rf-HlufY9vZ-qa9zdXUv1wGSPw3trIXuHuGvw-y62Jk09Qi8qmwuYiKSCNHOLHtnaH5V1yrUNhILTVuGpRSL7O_nIKg7oGmaaWFTqXMOY_OifZ_a0u5huTYkMN9-Il43MDfYdEEmlMqj4DtGpHY1CLD5BQb_o4mT21vJM5W9vTYtT5B1WfHhqo9T4iaI",
-    category: "Pinnacle",
-    specs: {
-      effectiveWidth: "880mm",
-      gaugeRange: "28G - 32G"
-    }
-  },
-  {
-    id: "corrugated-sheets",
-    title: "Corrugated Sheets",
-    description: "The timeless classic waveform. Versatile, reliable, and the standard for structural economy.",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAwjkB95aCIQS21D0gtGtIa159FliCkDrwwQ3I-yUMoNXqe7TE1hhJVp31Ys05lF-G5MjY1NvsPzG0cF_K8kCuF26vnttSKHBNdsCMAANhQDkEE8INrjbSzpzCLowvgMcDvV7fzJ1w2MjAfcZhT34ZGB4NNDKHdH0UNMJCtbEkYQVZh8tksmbpGJ9y362sVxtWtZemupSDYonpZGTz9tyTht1FQXPVXOX7NEVomZLswhBJqMZuFRpkGwqcSYoDdttTUfWR9EQyST_o",
-    category: "Colored"
   }
 ];
