@@ -13,8 +13,8 @@ services:
       # MPESA_SHORTCODE: ""
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.fringebuilder.rule=Host(`roofplanner.creativefringe.digital`)"
-      - "traefik.http.routers.fringebuilder.entrypoints=websecure"
-      - "traefik.http.routers.fringebuilder.tls=true"
-      - "traefik.http.services.fringebuilder.loadbalancer.server.port=3000"
+      - "traefik.http.routers.roofplanner.rule=Host(`roofplanner.creativefringe.digital`)"
+      - "traefik.http.routers.roofplanner.entrypoints=websecure"
+      - "traefik.http.routers.roofplanner.tls=true"
+      - "traefik.http.services.roofplanner.loadbalancer.server.port=3000"
     restart: unless-stopped
