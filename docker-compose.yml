@@ -1,5 +1,5 @@
 services:
-  fringebuilder:
+  roofplanner:
     image: ghcr.io/bnyawallow/roofplanner:latest
     container_name: roofplanner
     environment:
