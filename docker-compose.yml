@@ -1,20 +1,14 @@
 services:
   roofplanner:
-    image: ghcr.io/bnyawallow/roofplanner:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: roofplanner
-    environment:
-      NODE_ENV: production
-      PORT: 3000
-      # APP_BASE_URL: https://roofplanner.creativefringe.digital
-      # MPESA_ENVIRONMENT: sandbox
-      # MPESA_CONSUMER_KEY: ""
-      # MPESA_CONSUMER_SECRET: ""
-      # MPESA_PASSKEY: ""
-      # MPESA_SHORTCODE: ""
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.roofplanner.rule=Host(`roofplanner.creativefringe.digital`)"
-      - "traefik.http.routers.roofplanner.entrypoints=websecure"
-      - "traefik.http.routers.roofplanner.tls=true"
-      - "traefik.http.services.roofplanner.loadbalancer.server.port=3000"
     restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.roofplanner.rule=Host(`roofplanner.creativefringe.digital`)
+      - traefik.http.routers.roofplanner.entrypoints=websecure
+      - traefik.http.routers.roofplanner.tls=true
+      - traefik.http.routers.roofplanner.tls.certresolver=letsencrypt
+      - traefik.http.services.roofplanner.loadbalancer.server.port=80
