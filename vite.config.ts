@@ -13,22 +13,21 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('.', import.meta.url)),
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
     server: {
       host: true,
-      allowedHosts: ['roofplanner.creativefringe.digital'],
+      allowedHosts: ['.creativefringe.digital'],
       port: 3000,
       strictPort: true,
       hmr: env.DISABLE_HMR !== 'true',
     },
     preview: {
       host: true,
-      allowedHosts: ['roofplanner.creativefringe.digital'],
+      allowedHosts: ['.creativefringe.digital'],
       port: 3000,
       strictPort: true,
     },
-    base: '/',
   };
 });
