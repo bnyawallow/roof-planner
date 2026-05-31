@@ -18,14 +18,14 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: true,
-      allowedHosts: ['.creativefringe.digital'],
+      allowedHosts: ['roofplanner.creativefringe.digital'],
       port: 3000,
       strictPort: true,
       hmr: env.DISABLE_HMR !== 'true',
     },
     preview: {
       host: true,
-      allowedHosts: ['.creativefringe.digital'],
+      allowedHosts: ['roofplanner.creativefringe.digital'],
       port: 3000,
       strictPort: true,
     },
