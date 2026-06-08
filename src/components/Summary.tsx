@@ -1,11 +1,12 @@
 import React from 'react';
 import { MessageSquare, FileText, Building2, Hammer, ArrowRight } from 'lucide-react';
-import { RoofingProfile } from '../constants';
+import { RoofingProfile, ColorOption } from '../constants';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 interface SummaryProps {
   profile: RoofingProfile;
+  color: ColorOption;
   data: {
     sqm: number;
     estimatedSheets: number;
@@ -16,7 +17,7 @@ interface SummaryProps {
   };
 }
 
-export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
+export const Summary: React.FC<SummaryProps> = ({ profile, color, data }) => {
   const generatePDF = async () => {
     const doc = new jsPDF();
     const timestamp = new Date().toLocaleString();
@@ -78,6 +79,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
       head: [['Specification', 'Selection']],
       body: [
         ['Roofing Profile', profile.title],
+        ['Roof Color', color.name],
         ['Base Dimensions', `${data.length}M (Length) x ${data.width}M (Width)`],
         ['Material Thickness', data.thickness],
         ['Sheet Length', data.sheetLength],
@@ -106,7 +108,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
       startY: finalY + 20,
       head: [['Item', 'Description', 'Unit Price', 'Total']],
       body: [
-        [`Pinnacle ${profile.title}`, `Gauge ${data.thickness} | Matte Finish`, 'KES 1,250 / SQM', `KES ${sheetsCost.toLocaleString(undefined, {maximumFractionDigits: 0})}`],
+        [`Pinnacle ${profile.title}`, `Gauge ${data.thickness} | Matte Finish | Color: ${color.name}`, 'KES 1,250 / SQM', `KES ${sheetsCost.toLocaleString(undefined, {maximumFractionDigits: 0})}`],
         ['Self-Drilling Screws', '65mm | Weather Guard Coating', 'KES 8.5 / Unit', `KES ${fixingsCost.toLocaleString(undefined, {maximumFractionDigits: 0})}`],
       ],
       foot: [
@@ -187,7 +189,13 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
                   </div>
                   <div>
                     <h4 className="font-headline font-bold text-primary-container tracking-[-0.02em]">Pinnacle {profile.title}</h4>
-                    <p className="text-on-surface-variant text-sm font-sans">Gauge {data.thickness} | Matte Finish | Brick Red</p>
+                    <p className="text-on-surface-variant text-sm font-sans flex flex-wrap items-center gap-2">
+                      <span>Gauge {data.thickness} | Matte Finish | </span>
+                      <span className="inline-flex items-center gap-1.5 font-bold text-primary-container bg-surface-container-high px-2 py-0.5 rounded-sm">
+                        <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: color.hex }}></span>
+                        {color.name}
+                      </span>
+                    </p>
                   </div>
                 </div>
                 <div className="text-right">

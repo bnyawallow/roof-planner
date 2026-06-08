@@ -8,15 +8,17 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { StepIndicator } from './components/StepIndicator';
 import { ProfileSelection } from './components/ProfileSelection';
+import { ColorSelection } from './components/ColorSelection';
 import { Measurements } from './components/Measurements';
 import { Summary } from './components/Summary';
-import { RoofingProfile } from './constants';
+import { RoofingProfile, COLOR_OPTIONS, ColorOption } from './constants';
 
-type Page = 'profiles' | 'measurements' | 'summary';
+type Page = 'profiles' | 'color' | 'measurements' | 'summary';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('profiles');
   const [selectedProfile, setSelectedProfile] = useState<RoofingProfile | null>(null);
+  const [selectedColor, setSelectedColor] = useState<ColorOption>(COLOR_OPTIONS[0]);
   const [measurementData, setMeasurementData] = useState<any>(null);
 
   const handleNavigate = (page: string) => {
@@ -26,8 +28,12 @@ export default function App() {
 
   const handleProfileSelect = (profile: RoofingProfile) => {
     setSelectedProfile(profile);
-    setCurrentPage('measurements');
+    setCurrentPage('color');
     window.scrollTo(0, 0);
+  };
+
+  const handleColorSelect = (color: ColorOption) => {
+    setSelectedColor(color);
   };
 
   const handleMeasurementsComplete = (data: any) => {
@@ -43,12 +49,23 @@ export default function App() {
         currentPage={currentPage} 
         onNavigate={handleNavigate}
         selectedProfile={!!selectedProfile}
+        selectedColor={!!selectedColor}
         measurementData={!!measurementData}
       />
       
       <main className="flex-grow">
         {currentPage === 'profiles' && (
           <ProfileSelection onSelect={handleProfileSelect} />
+        )}
+
+        {currentPage === 'color' && selectedProfile && (
+          <ColorSelection 
+            selectedProfile={selectedProfile}
+            selectedColor={selectedColor}
+            onColorSelect={handleColorSelect}
+            onNext={() => handleNavigate('measurements')}
+            onBack={() => handleNavigate('profiles')}
+          />
         )}
         
         {currentPage === 'measurements' && selectedProfile && (
@@ -61,6 +78,7 @@ export default function App() {
         {currentPage === 'summary' && selectedProfile && measurementData && (
           <Summary 
             profile={selectedProfile} 
+            color={selectedColor}
             data={measurementData} 
           />
         )}

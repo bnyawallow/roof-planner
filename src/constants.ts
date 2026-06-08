@@ -58,3 +58,49 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     category: "Pinnacle"
   }
 ];
+
+export interface ColorOption {
+  id: string;
+  name: string;
+  hex: string;
+  opacity: number;
+  secondaryBlend?: string;
+  description: string;
+  vibe: string;
+}
+
+export const COLOR_OPTIONS: ColorOption[] = [
+  {
+    id: 'charcoal',
+    name: 'Charcoal Gray',
+    hex: '#333538',
+    opacity: 0.35,
+    description: 'Deep contemporary neutral slate tone that emphasizes clean modern structural lines.',
+    vibe: 'Modern & Sophisticated'
+  },
+  {
+    id: 'tile-red',
+    name: 'Tile Red',
+    hex: '#8c2424',
+    opacity: 0.7,
+    description: 'Classic clay-brick red designed to offer a timeless, warm, and highly authentic appeal.',
+    vibe: 'Warm & Traditional'
+  },
+  {
+    id: 'chocolate',
+    name: 'Chocolate',
+    hex: '#4e3325',
+    opacity: 0.75,
+    description: 'Warm, chocolate-earth brown that integrates seamlessly into residential surroundings.',
+    vibe: 'Rich & Organic'
+  },
+  {
+    id: 'dark-green',
+    name: 'Dark Green',
+    hex: '#1f3e26',
+    opacity: 0.65,
+    description: 'Deep forest safari green, ideal for natural landscapes and eco-friendly home structures.',
+    vibe: 'Serene & Eco-Friendly'
+  }
+];
+

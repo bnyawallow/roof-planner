@@ -3,9 +3,10 @@ import { cn } from '../lib/utils';
 import { Check } from 'lucide-react';
 
 interface StepIndicatorProps {
-  currentPage: 'profiles' | 'measurements' | 'summary';
+  currentPage: 'profiles' | 'color' | 'measurements' | 'summary';
   onNavigate: (page: string) => void;
   selectedProfile: boolean;
+  selectedColor: boolean;
   measurementData: boolean;
 }
 
@@ -13,10 +14,12 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
   currentPage, 
   onNavigate,
   selectedProfile,
+  selectedColor,
   measurementData
 }) => {
   const steps = [
     { id: 'profiles', label: 'Profile' },
+    { id: 'color', label: 'Color' },
     { id: 'measurements', label: 'Measurements' },
     { id: 'summary', label: 'Summary' },
   ];
@@ -24,12 +27,18 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
   const getStepStatus = (stepId: string, index: number) => {
     if (stepId === currentPage) return 'current';
     
-    // Check if step is completed
-    const isCompleted = (index === 0 && selectedProfile) || 
-                        (index === 1 && measurementData) ||
-                        (index === 2 && false); // Summary is last
+    // Sequentially check completion
+    if (stepId === 'profiles') {
+      return selectedProfile ? 'completed' : 'upcoming';
+    }
+    if (stepId === 'color') {
+      return (selectedProfile && (currentPage === 'measurements' || currentPage === 'summary' || measurementData)) ? 'completed' : 'upcoming';
+    }
+    if (stepId === 'measurements') {
+      return (selectedProfile && measurementData && currentPage === 'summary') ? 'completed' : 'upcoming';
+    }
     
-    return isCompleted ? 'completed' : 'upcoming';
+    return 'upcoming';
   };
 
   return (
@@ -37,7 +46,14 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
       <div className="max-w-screen-2xl mx-auto px-6 py-4 flex items-center justify-center gap-4">
         {steps.map((step, index) => {
           const status = getStepStatus(step.id, index);
-          const isClickable = status === 'completed';
+          
+          // Clickable if completed, or has been reached and unlocked sequentially
+          const isClickable = 
+            status === 'completed' ||
+            step.id === 'profiles' ||
+            (step.id === 'color' && selectedProfile) ||
+            (step.id === 'measurements' && selectedProfile && (currentPage === 'measurements' || currentPage === 'summary' || measurementData)) ||
+            (step.id === 'summary' && selectedProfile && measurementData);
 
           return (
             <React.Fragment key={step.id}>
@@ -46,7 +62,8 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-full transition-all",
                   status === 'current' ? "bg-primary-container text-white" : 
-                  status === 'completed' ? "bg-secondary-container/10 text-secondary-container" : 
+                  status === 'completed' ? "bg-secondary-container/10 text-secondary-container hover:bg-secondary-container/20 cursor-pointer" : 
+                  isClickable ? "text-on-surface-variant hover:text-primary-container cursor-pointer" :
                   "text-on-surface-variant/50 cursor-default"
                 )}
                 disabled={!isClickable}
