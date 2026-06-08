@@ -12,7 +12,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
     <nav className="fixed top-0 w-full z-50 glass-panel shadow-ambient h-20">
       <div className="flex justify-between items-center w-full px-6 h-full max-w-screen-2xl mx-auto">
         <div className="flex items-center cursor-pointer h-full" onClick={() => onNavigate('profiles')}>
-          <img src="/logo.png" alt="Pinnacle Builders Logo" className="h-full py-2 w-auto object-contain" referrerPolicy="no-referrer" />
+          <img src="/images/logo.png" alt="Pinnacle Builders Logo" className="h-full py-2 w-auto object-contain" referrerPolicy="no-referrer" />
         </div>
         
         <div className="hidden md:flex items-center gap-8">

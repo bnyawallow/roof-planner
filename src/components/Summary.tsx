@@ -116,7 +116,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
 
     // 2. HEADER - LOGO & BRAND INFO
     try {
-      const logoData = await loadImage('/logo.png');
+      const logoData = await loadImage('/images/logo.png');
       doc.addImage(logoData, 'PNG', 14, 15, 34, 12);
     } catch (e) {
       console.error("Failed to load logo for PDF", e);
