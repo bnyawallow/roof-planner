@@ -23,6 +23,10 @@ export const ColorSelection: React.FC<ColorSelectionProps> = ({
   onNext,
   onBack,
 }) => {
+  const availableFinishes = selectedProfile.id === 'stone-coated-shingles'
+    ? FINISH_OPTIONS.filter((f) => f.id === 'matte')
+    : FINISH_OPTIONS;
+
   return (
     <div className="pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
       <header className="mb-12 animate-fade-in">
@@ -232,8 +236,8 @@ export const ColorSelection: React.FC<ColorSelectionProps> = ({
                 Step 2: Select Polish Finish
               </h3>
 
-              <div className="grid grid-cols-2 gap-4">
-                {FINISH_OPTIONS.map((finish) => {
+              <div className={cn("grid gap-4", availableFinishes.length === 1 ? "grid-cols-1" : "grid-cols-2")}>
+                {availableFinishes.map((finish) => {
                   const isSelected = selectedFinish.id === finish.id;
 
                   return (

@@ -29,6 +29,9 @@ export default function App() {
 
   const handleProfileSelect = (profile: RoofingProfile) => {
     setSelectedProfile(profile);
+    if (profile.id === 'stone-coated-shingles') {
+      setSelectedFinish(FINISH_OPTIONS[0]); // Force matte
+    }
     setCurrentPage('color');
     window.scrollTo(0, 0);
   };

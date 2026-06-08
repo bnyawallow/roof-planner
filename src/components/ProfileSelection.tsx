@@ -43,10 +43,10 @@ export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) 
             </div>
             <div className="p-6 flex flex-col flex-grow">
               <p className="text-on-surface-variant text-sm font-medium mb-6 font-sans">{profile.description}</p>
-              <div className="mt-auto flex justify-between items-center">
-                <span className="text-secondary-container font-black text-sm uppercase tracking-tighter">Select Profile</span>
-                <div className="bg-surface-container-low p-2 rounded-sm group-hover:bg-secondary-container group-hover:text-white transition-colors">
-                  <ArrowRight className="w-4 h-4" />
+              <div className="mt-auto">
+                <div className="w-full bg-secondary-container text-white py-3.5 px-6 rounded-md font-bold text-sm transition-all duration-300 group-hover:bg-[#ff7b4b] group-hover:shadow-lg flex items-center justify-center gap-2">
+                  <span>Select Profile</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             </div>

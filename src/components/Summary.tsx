@@ -23,6 +23,73 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     const doc = new jsPDF();
     const timestamp = new Date().toLocaleString();
 
+    // Load custom fonts (Inter and Work Sans) if possible, with standard fallback
+    let hasInter = false;
+    let hasWorkSansBold = false;
+    let hasWorkSansRegular = false;
+
+    // Helper to convert array buffer to base64 safely
+    const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      const len = bytes.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return btoa(binary);
+    };
+
+    try {
+      const interRes = await fetch('https://cdn.jsdelivr.net/npm/@fontsource/inter/files/inter-latin-400-normal.ttf');
+      if (interRes.ok) {
+        const interBuffer = await interRes.arrayBuffer();
+        const interBase64 = arrayBufferToBase64(interBuffer);
+        doc.addFileToVFS('Inter-Regular.ttf', interBase64);
+        doc.addFont('Inter-Regular.ttf', 'Inter', 'normal');
+        hasInter = true;
+      }
+    } catch (e) {
+      console.warn("Failed to load Inter font for PDF", e);
+    }
+
+    try {
+      const wsRes = await fetch('https://cdn.jsdelivr.net/npm/@fontsource/work-sans/files/work-sans-latin-700-normal.ttf');
+      if (wsRes.ok) {
+        const wsBuffer = await wsRes.arrayBuffer();
+        const wsBase64 = arrayBufferToBase64(wsBuffer);
+        doc.addFileToVFS('WorkSans-Bold.ttf', wsBase64);
+        doc.addFont('WorkSans-Bold.ttf', 'Work Sans', 'bold');
+        hasWorkSansBold = true;
+      }
+    } catch (e) {
+      console.warn("Failed to load Work Sans Bold font for PDF", e);
+    }
+
+    try {
+      const wsRegRes = await fetch('https://cdn.jsdelivr.net/npm/@fontsource/work-sans/files/work-sans-latin-400-normal.ttf');
+      if (wsRegRes.ok) {
+        const wsRegBuffer = await wsRegRes.arrayBuffer();
+        const wsRegBase64 = arrayBufferToBase64(wsRegBuffer);
+        doc.addFileToVFS('WorkSans-Regular.ttf', wsRegBase64);
+        doc.addFont('WorkSans-Regular.ttf', 'Work Sans', 'normal');
+        hasWorkSansRegular = true;
+      }
+    } catch (e) {
+      console.warn("Failed to load Work Sans Regular font for PDF", e);
+    }
+
+    const setPDFFont = (family: 'sans' | 'headline', style: 'normal' | 'bold') => {
+      if (family === 'headline' && style === 'bold' && hasWorkSansBold) {
+        doc.setFont('Work Sans', 'bold');
+      } else if (family === 'headline' && style === 'normal' && hasWorkSansRegular) {
+        doc.setFont('Work Sans', 'normal');
+      } else if (family === 'sans' && style === 'normal' && hasInter) {
+        doc.setFont('Inter', 'normal');
+      } else {
+        doc.setFont('helvetica', style);
+      }
+    };
+
     // Helper to load image
     const loadImage = (url: string): Promise<string> => {
       return new Promise((resolve, reject) => {
@@ -54,7 +121,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     } catch (e) {
       console.error("Failed to load logo for PDF", e);
       // Fallback elegant brand text
-      doc.setFont('helvetica', 'bold');
+      setPDFFont('headline', 'bold');
       doc.setFontSize(16);
       doc.setTextColor(18, 26, 52);
       doc.text('PINNACLE BUILDERS', 14, 24);
@@ -63,40 +130,35 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     }
 
     // Interactive Contacts Section (Left)
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
-    doc.setTextColor(110);
-    doc.text('Premium Architectural Roofing Systems', 14, 34);
-
-    doc.setFont('helvetica', 'normal');
+    setPDFFont('sans', 'normal');
     doc.setFontSize(8.5);
     doc.setTextColor(69, 70, 77);
-    doc.text('HQ Office: Industrial Area, Nairobi, Kenya', 14, 39);
+    doc.text('HQ Office: Industrial Area, Nairobi, Kenya', 14, 34);
 
     // Clickable Phone
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('sans', 'bold');
     doc.setTextColor(254, 106, 52); // Brand Orange
-    doc.text('Tel: +254 116 893 804', 14, 44);
-    doc.link(14, 41, 35, 4, { url: 'tel:+254116893804' });
+    doc.text('Tel: +254 116 893 804', 14, 39);
+    doc.link(14, 36, 35, 4, { url: 'tel:+254116893804' });
 
     // Clickable Email
-    doc.text('Email: sales@pinnacleroofing.co.ke', 14, 49);
-    doc.link(14, 46, 54, 4, { url: 'mailto:sales@pinnacleroofing.co.ke' });
+    doc.text('Email: sales@pinnacleroofing.co.ke', 14, 44);
+    doc.link(14, 41, 54, 4, { url: 'mailto:sales@pinnacleroofing.co.ke' });
 
     // Clickable Website Link
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('sans', 'bold');
     doc.setTextColor(18, 26, 52); // Brand Navy
-    doc.text('Visit: pinnacleroofing.co.ke', 14, 54);
-    doc.link(14, 51, 42, 4, { url: 'mailto:sales@pinnacleroofing.co.ke' }); // Uses the sales mailbox as reliable fallback, or actual site URL
+    doc.text('Visit: pinnacleroofing.co.ke', 14, 49);
+    doc.link(14, 46, 42, 4, { url: 'https://pinnacleroofing.co.ke' });
 
     // 3. HEADER RIGHT - INVOICE/REPORT SPECIFICS
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('headline', 'bold');
     doc.setFontSize(16);
     doc.setTextColor(18, 26, 52);
     doc.text('MATERIALS ESTIMATE', 196, 22, { align: 'right' });
 
     const reportId = `PIN-EST-${Math.floor(100000 + Math.random() * 900000)}`;
-    doc.setFont('helvetica', 'normal');
+    setPDFFont('sans', 'normal');
     doc.setFontSize(8.5);
     doc.setTextColor(120);
     doc.text(`Reference ID: ${reportId}`, 196, 27, { align: 'right' });
@@ -105,22 +167,22 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
 
     // Thin elegant divider line below header
     doc.setDrawColor(220, 225, 235);
-    doc.line(14, 58, 196, 58);
+    doc.line(14, 53, 196, 53);
 
     // 4. METADATA KPI CARDS (Interactive blocks)
     // Three Cards across 182mm available width. Each card is 56mm width, separated by 7mm.
-    const cardY = 62;
+    const cardY = 57;
     const cardH = 22;
     const cardW = 56;
     
     // Card 1: TOTAL SURFACE AREA
     doc.setFillColor(243, 246, 252);
     doc.roundedRect(14, cardY, cardW, cardH, 2, 2, 'F');
-    doc.setFont('helvetica', 'normal');
+    setPDFFont('sans', 'normal');
     doc.setFontSize(7.5);
     doc.setTextColor(110);
     doc.text('ESTIMATED SURFACE AREA', 18, cardY + 6);
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('headline', 'bold');
     doc.setFontSize(15);
     doc.setTextColor(18, 26, 52);
     doc.text(`${data.sqm.toFixed(1)} SQM`, 18, cardY + 15);
@@ -128,11 +190,11 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     // Card 2: ROOFING SHEETS
     doc.setFillColor(243, 246, 252);
     doc.roundedRect(14 + cardW + 7, cardY, cardW, cardH, 2, 2, 'F');
-    doc.setFont('helvetica', 'normal');
+    setPDFFont('sans', 'normal');
     doc.setFontSize(7.5);
     doc.setTextColor(110);
     doc.text('TOTAL ROOFING SHEETS', 14 + cardW + 11, cardY + 6);
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('headline', 'bold');
     doc.setFontSize(15);
     doc.setTextColor(254, 106, 52); // High attention orange
     doc.text(`${data.estimatedSheets} Pcs`, 14 + cardW + 11, cardY + 15);
@@ -140,25 +202,26 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     // Card 3: COMPATIBLE NAILS/SCREWS
     doc.setFillColor(243, 246, 252);
     doc.roundedRect(14 + (cardW * 2) + 14, cardY, cardW, cardH, 2, 2, 'F');
-    doc.setFont('helvetica', 'normal');
+    setPDFFont('sans', 'normal');
     doc.setFontSize(7.5);
     doc.setTextColor(110);
     doc.text('CORROSION-GUARD HARDWARE', 14 + (cardW * 2) + 18, cardY + 6);
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('headline', 'bold');
     doc.setFontSize(15);
     doc.setTextColor(18, 26, 52);
     doc.text(`${(data.estimatedSheets * 12).toLocaleString()} Pcs`, 14 + (cardW * 2) + 18, cardY + 15);
 
     // 5. SECTION 1: ARCHITECTURAL SPECIFICATIONS TABLE
     doc.setFillColor(18, 26, 52);
-    doc.rect(14, 91, 3, 5, 'F');
-    doc.setFont('helvetica', 'bold');
+    doc.rect(14, 86, 3, 5, 'F');
+    setPDFFont('headline', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(18, 26, 52);
-    doc.text('1. INTEGRATED TECHNICAL SPECIFICATIONS', 20, 95);
+    doc.text('1. INTEGRATED TECHNICAL SPECIFICATIONS', 20, 90);
 
     autoTable(doc, {
-      startY: 98,
+      startY: 93,
+      margin: { bottom: 25, top: 20, left: 14, right: 14 },
       head: [['Architectural Specification Code', 'Pinnacle Professional Selection']],
       body: [
         ['Roofing Profile Style', `${profile.title} (Authentic Pinnacle Standard)`],
@@ -169,8 +232,18 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
         ['Custom Custom Cut Sheet Length', `${data.sheetLength} Meters`],
       ],
       theme: 'striped',
-      headStyles: { fillColor: [18, 26, 52], textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
-      styles: { cellPadding: 4, fontSize: 8 },
+      headStyles: { 
+        fillColor: [18, 26, 52], 
+        textColor: 255, 
+        fontStyle: 'bold', 
+        fontSize: 8.5,
+        font: hasWorkSansBold ? 'Work Sans' : 'helvetica'
+      },
+      styles: { 
+        cellPadding: 4, 
+        fontSize: 8, 
+        font: hasInter ? 'Inter' : 'helvetica' 
+      },
       columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70 }, 1: { cellWidth: 112 } }
     });
 
@@ -179,7 +252,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     
     doc.setFillColor(18, 26, 52);
     doc.rect(14, finalTable1Y, 3, 5, 'F');
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('headline', 'bold');
     doc.setFontSize(10);
     doc.setTextColor(18, 26, 52);
     doc.text('2. SPECIFIED BILL OF MATERIALS & COMMODITY PRICES', 20, finalTable1Y + 4);
@@ -190,6 +263,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
 
     autoTable(doc, {
       startY: finalTable1Y + 7,
+      margin: { bottom: 25, top: 20, left: 14, right: 14 },
       head: [['Product Code / Item description', 'Technical Configuration', 'Unit Rate KES', 'Net Total KES']],
       body: [
         [
@@ -209,34 +283,58 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
         ['ESTIMATED TOTAL CONVEYED REQUISITION', '', 'GRAND KES TOTAL', totalCost.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})]
       ],
       theme: 'grid',
-      headStyles: { fillColor: [18, 26, 52], textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
-      footStyles: { fillColor: [254, 106, 52], textColor: 255, fontStyle: 'bold', fontSize: 9 },
-      styles: { cellPadding: 4.5, fontSize: 8 },
+      headStyles: { 
+        fillColor: [18, 26, 52], 
+        textColor: 255, 
+        fontStyle: 'bold', 
+        fontSize: 8.5,
+        font: hasWorkSansBold ? 'Work Sans' : 'helvetica'
+      },
+      footStyles: { 
+        fillColor: [254, 106, 52], 
+        textColor: 255, 
+        fontStyle: 'bold', 
+        fontSize: 9,
+        font: hasWorkSansBold ? 'Work Sans' : 'helvetica'
+      },
+      styles: { 
+        cellPadding: 4.5, 
+        fontSize: 8, 
+        font: hasInter ? 'Inter' : 'helvetica' 
+      },
       columnStyles: { 0: { fontStyle: 'bold' } }
     });
 
     // 7. MULTI-LAYER CAPTIVATING DESIGN PIECE (Technical Advisory Notice & Call to action)
     const finalTable2Y = (doc as any).lastAutoTable.finalY + 8;
 
+    let targetY = finalTable2Y;
+    // We need 22mm for Warrant Shield + 5mm gap + 28mm for CTA Banner + 5mm page buffer = 60mm.
+    // The footer line is drawn at Y = 280, so we must complete rendering above 275.
+    if (finalTable2Y + 60 > 275) {
+      doc.addPage();
+      targetY = 20; // Start at elegant top margin on new page
+    }
+
     // Technical Warrant Shield
     doc.setFillColor(255, 249, 246); // Tender light orange/cream bg
     doc.setDrawColor(254, 106, 52, 0.4); // Subtle Orange Border style
-    doc.roundedRect(14, finalTable2Y, 182, 22, 1.5, 1.5, 'FD');
+    doc.roundedRect(14, targetY, 182, 22, 1.5, 1.5, 'FD');
 
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('headline', 'bold');
     doc.setFontSize(8);
     doc.setTextColor(254, 106, 52);
-    doc.text('PINNACLE 15-YEAR GUARANTEE & STRUCTURAL INTEGRITY', 18, finalTable2Y + 5);
+    doc.text('PINNACLE 15-YEAR GUARANTEE & STRUCTURAL INTEGRITY', 18, targetY + 5);
 
-    doc.setFont('helvetica', 'normal');
+    setPDFFont('sans', 'normal');
     doc.setFontSize(7.5);
     doc.setTextColor(80);
     // Multi line wrapping of message text
     const warrantyText = "These high-durability roofing estimates are covered by our certified 15-Year Multi-Clad UV Anti-Fade guarantee when combined with authentic Pinnacle Weather-Guard self-drilling fasteners. We strongly request a site validation before loading physical roof frame timber boards.";
-    doc.text(doc.splitTextToSize(warrantyText, 174), 18, finalTable2Y + 11);
+    doc.text(doc.splitTextToSize(warrantyText, 174), 18, targetY + 11);
 
     // Interactive CTA Consulting Banner
-    const bannerY = finalTable2Y + 27;
+    const bannerY = targetY + 27;
     doc.setFillColor(18, 26, 52); // Brand Navy Block
     doc.roundedRect(14, bannerY, 182, 28, 1.5, 1.5, 'F');
 
@@ -244,7 +342,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     doc.setFillColor(254, 106, 52); // Bright Brand Orange
     doc.roundedRect(138, bannerY + 6, 52, 16, 1, 1, 'F');
 
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('sans', 'bold');
     doc.setFontSize(7.5);
     doc.setTextColor(255);
     doc.text('TALK TO INTEGRATION LEAD', 142, bannerY + 15);
@@ -253,12 +351,12 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     doc.link(138, bannerY + 6, 52, 16, { url: 'https://wa.me/254116893804' });
 
     // Left block of banner text
-    doc.setFont('helvetica', 'bold');
+    setPDFFont('headline', 'bold');
     doc.setFontSize(9.5);
     doc.setTextColor(254, 106, 52); // Orange title
     doc.text('READY TO SECURE ARCHITECTURAL QUALITY?', 18, bannerY + 8);
     
-    doc.setFont('helvetica', 'normal');
+    setPDFFont('sans', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(255);
     doc.text('Confirm dynamic project details, order raw sheet colors, and plan certified onsite', 18, bannerY + 14);
@@ -272,12 +370,12 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
       doc.setDrawColor(220, 225, 235);
       doc.line(14, 280, 196, 280);
 
-      doc.setFont('helvetica', 'bold');
+      setPDFFont('headline', 'bold');
       doc.setFontSize(7.5);
       doc.setTextColor(18, 26, 52);
       doc.text('PINNACLE BUILDERS • Premium Steel Standard', 14, 286);
       
-      doc.setFont('helvetica', 'normal');
+      setPDFFont('sans', 'normal');
       doc.setFontSize(7.5);
       doc.text('Site Inspections • Multi-Clad Coating • Kenyan KEBS Standard', 14, 290);
       
@@ -400,12 +498,10 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
 
           <button 
             onClick={generatePDF}
-            className="bg-surface-container-lowest p-6 rounded-xl flex items-center justify-between group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-surface-container-low active:scale-95 shadow-ambient"
+            className="w-full bg-secondary-container text-white p-5 rounded-xl flex items-center justify-center gap-3 group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-[#ff7b4b] active:scale-95 shadow-ambient font-bold"
           >
-            <div className="flex items-center gap-3">
-              <FileText className="w-6 h-6 text-primary-container" />
-              <span className="font-headline font-bold tracking-[-0.02em]">Download PDF Summary</span>
-            </div>
+            <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <span className="font-headline tracking-[-0.01em] text-sm md:text-base">Download Estimate</span>
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
           </button>
         </div>

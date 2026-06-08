@@ -1,5 +1,6 @@
 {
   "name": "Pinnacle Builders - Roof Planner",
   "description": "Precision-engineered roofing solutions and architectural roof planning tool for Kenyan climates.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
