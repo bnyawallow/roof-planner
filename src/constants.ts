@@ -15,7 +15,7 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     id: "box-profile",
     title: "Box Profile",
     description: "High-precision angular ribs for superior load-bearing capacity.",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA3K8HWdu0_gkfiZyGFLdcXvc0cQIygbGSKfeCo2SHQ6jf4sqCmtslLqUv0H72CphC22d7x5_UFs2vI3C9Rf-HlufY9vZ-qa9zdXUv1wGSPw3trIXuHuGvw-y62Jk09Qi8qmwuYiKSCNHOLHtnaH5V1yrUNhILTVuGpRSL7O_nIKg7oGmaaWFTqXMOY_OifZ_a0u5huTYkMN9-Il43MDfYdEEmlMqj4DtGpHY1CLD5BQb_o4mT21vJM5W9vTYtT5B1WfHhqo9T4iaI",
+    image: "/src/assets/images/box_profile_1780836606931.png",
     category: "Pinnacle",
     specs: {
       effectiveWidth: "880mm",
@@ -24,37 +24,37 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
   },
   {
     id: "classic-tile",
-    title: "Tile Profile",
+    title: "Classic Tile",
     description: "Architectural elegance of traditional tiles with the durability of lightweight steel.",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCw_qwO2CU5DUySCO4pIEJ6mT67mxZ0NG7GkjEVVYa-YFUg3Ee8TFT62TWYdeOoEqyP3evjZVhv1E3MxseVlTUgNwnrH2poRpfAT2MocWIh0qSODqGdJI-zRiTZ0d_ZeCKIV5L8vjZoUL2J3NPtjV1xKblykzGKUrYvf9ZATlUSZyOKf7EpihL6r-yRJrFKB5uBpc6OEx4BwPXJdxTIz8epOe5IuQViA7EX6qEWsZNm7BxkbHNmpGo1NyR3y3T56t6SJxV-rnO-LgU",
+    image: "/src/assets/images/classic_tile_roofing_sheet_1780836849615.png",
     category: "Pinnacle"
   },
   {
     id: "corrugated-sheets",
-    title: "Corrugated",
+    title: "Corrugated Sheet",
     description: "The classic, time-tested waveform for optimal drainage.",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAwjkB95aCIQS21D0gtGtIa159FliCkDrwwQ3I-yUMoNXqe7TE1hhJVp31Ys05lF-G5MjY1NvsPzG0cF_K8kCuF26vnttSKHBNdsCMAANhQDkEE8INrjbSzpzCLowvgMcDvV7fzJ1w2MjAfcZhT34ZGB4NNDKHdH0UNMJCtbEkYQVZh8tksmbpGJ9y362sVxtWtZemupSDYonpZGTz9tyTht1FQXPVXOX7NEVomZLswhBJqMZuFRpkGwqcSYoDdttTUfWR9EQyST_o",
+    image: "/src/assets/images/corrugated_roofing_sheet_1780837354489.png",
     category: "Colored"
   },
   {
     id: "ecospan-tile",
     title: "EcoSpan Tile",
     description: "Modern roofing with a unique design, cost-effective and durable solution for contemporary builds.",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAwjkB95aCIQS21D0gtGtIa159FliCkDrwwQ3I-yUMoNXqe7TE1hhJVp31Ys05lF-G5MjY1NvsPzG0cF_K8kCuF26vnttSKHBNdsCMAANhQDkEE8INrjbSzpzCLowvgMcDvV7fzJ1w2MjAfcZhT34ZGB4NNDKHdH0UNMJCtbEkYQVZh8tksmbpGJ9y362sVxtWtZemupSDYonpZGTz9tyTht1FQXPVXOX7NEVomZLswhBJqMZuFRpkGwqcSYoDdttTUfWR9EQyST_o",
-    category: "Pinnacle roofing"
+    image: "/src/assets/images/ecospan_accurate_mabati_1780921162670.png",
+    category: "Pinnacle Builders"
   },
   {
     id: "briton-tile",
     title: "Briton Tile",
     description: "A classic aesthetic with high strength, perfectly suited for Kenyan architectural heritage.",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBwUSMYFfyJ9rxB2PaHTwqbFr3XM9kqj2WdVmson4mFUKZNVgR29GTYUd-N0jJNSCMvk0m1uie6mJZ75zG2TknNmFkirX9JJ8A5269YHaiRaqvIqMwXkRa5H0VNFXjuSHeggzowbK4pjzNGlN-vLMQigiiJDLu_MasFZQt7XtK7Z8OTCt4u0lXByKYD86SfHro-Hs-dl2jJR7ycS0I5PZgPm7UH1qNKUgGoPuCUw4yk2718Th4KoDtYMnfIP-YXu05Bji0Sx82383Q",
+    image: "/src/assets/images/briton_tile_sheet_1780837384287.png",
     category: "Pinnacle"
   },
   {
     id: "stone-coated-shingles",
     title: "Stone Coated Shingles",
     description: "Premium, extremely durable with a natural stone look. The ultimate choice for longevity.",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAVQkiyRnLoLcl-UpSm32HdEeAXXecu20HpdAZdt7A_Ae1fNYlzqSYKuXHVTvq2UnaYMLytm1t2Z_qduJx9_cdLJXYCboAKLCE1SmgH72kgasCUvJV4b1SihxKpWjCf9_wFS8TI1Gy1dDiGQEt5dFDW-V1F2U-puhF_xql_y5OxG1l4_NieCP6ALHKbYc_9_Kg9_cxW2CKwa2AZUISySmKBEtzEqLOnUYXU2ne-Al8gunq2lMw8ixpap0-sG57pzV6r9CjGvOLD5Bw",
+    image: "/src/assets/images/stone_coated_shingles_1780837397275.png",
     category: "Pinnacle"
   }
 ];

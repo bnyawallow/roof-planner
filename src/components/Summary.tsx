@@ -48,7 +48,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
       // Fallback text if logo fails
       doc.setFontSize(20);
       doc.setTextColor(18, 26, 52);
-      doc.text('PINNACLE ROOFING', 14, 25);
+      doc.text('PINNACLE BUILDERS', 14, 25);
     }
 
     // Header Right
@@ -63,7 +63,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
     // Contact Info
     doc.setFontSize(10);
     doc.setTextColor(69, 70, 77);
-    doc.text('Pinnacle Roofing Systems', 14, 40);
+    doc.text('Pinnacle Builders', 14, 40);
     doc.text('Industrial Area, Nairobi, Kenya', 14, 45);
     doc.text('+254 116 893 804', 14, 50);
     doc.text('sales@pinnacleroofing.co.ke', 14, 55);
@@ -130,7 +130,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
 
       doc.setFontSize(8);
       doc.setTextColor(150);
-      doc.text('Pinnacle Roofing Systems | The Standard of Steel', 14, 287);
+      doc.text('Pinnacle Builders | The Standard of Steel', 14, 287);
       doc.text(`Page ${i} of ${pageCount}`, 196, 287, { align: 'right' });
     }
 
@@ -221,10 +221,14 @@ export const Summary: React.FC<SummaryProps> = ({ profile, data }) => {
               <div className="text-white/60 mb-6 block">Direct Assistance</div>
               <h3 className="font-headline font-black text-3xl tracking-[-0.02em] mb-4">Consult with our Technical Lead</h3>
               <p className="text-white/80 mb-8 leading-relaxed font-sans">Book a comprehensive <strong>site assessment</strong> and ensure <strong>professional installation</strong> by speaking directly with our technical lead.</p>
-              <button className="bg-whatsapp-green w-full py-4 rounded-md flex items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-[#20bd5a] active:scale-95 shadow-ambient group">
+              <a 
+                href="https://wa.me/254116893804" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-whatsapp-green w-full py-4 rounded-md flex items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-[#20bd5a] active:scale-95 shadow-ambient group">
                 <MessageSquare className="w-6 h-6 fill-current group-hover:scale-110 transition-transform" />
-                <span className="font-bold text-sm font-sans">Chat on WhatsApp</span>
-              </button>
+                <span className="font-bold text-sm font-sans">Free Chat</span>
+              </a>
             </div>
             <div className="mt-auto pt-12">
               <div className="border-l-4 border-secondary-container pl-6">

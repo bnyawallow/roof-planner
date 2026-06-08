@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-3 mb-6">
               <span className="text-2xl font-black tracking-[-0.02em] uppercase font-headline">Pinnacle</span>
               <div className="bg-white/5 px-2 py-0.5 rounded-sm">
-                <div className="text-white/60">Roofing Systems</div>
+                <div className="text-white/60">Builders</div>
               </div>
             </div>
             <p className="text-white/60 text-sm max-w-sm leading-relaxed font-sans">
@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
               className="inline-flex items-center gap-2 bg-whatsapp-green hover:brightness-110 text-white px-6 py-3 rounded-md font-bold text-xs transition-all active:scale-95 shadow-ambient font-sans"
             >
               <MessageSquare className="w-4 h-4 fill-current" />
-              WhatsApp Consultant
+              Free Chat
             </a>
           </div>
         </div>
@@ -55,7 +55,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-white/40">
-            © 2024 PINNACLE ROOFING SYSTEMS
+            © 2024 PINNACLE BUILDERS
           </div>
           <div className="flex gap-8">
             <a href="#" className="tech-label text-white/40 hover:text-white transition-colors">Privacy</a>
