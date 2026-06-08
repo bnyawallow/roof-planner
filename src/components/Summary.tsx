@@ -41,101 +41,247 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
       });
     };
 
+    // 1. BRAND BARS (Top Accent)
+    doc.setFillColor(18, 26, 52); // Pinnacle Brand Navy
+    doc.rect(0, 0, 210, 8, 'F');
+    doc.setFillColor(254, 106, 52); // Pinnacle Brand Orange
+    doc.rect(0, 8, 210, 2.5, 'F');
+
+    // 2. HEADER - LOGO & BRAND INFO
     try {
       const logoData = await loadImage('/logo.png');
-      // Add logo at top left
-      doc.addImage(logoData, 'PNG', 14, 15, 40, 15);
+      doc.addImage(logoData, 'PNG', 14, 15, 34, 12);
     } catch (e) {
       console.error("Failed to load logo for PDF", e);
-      // Fallback text if logo fails
-      doc.setFontSize(20);
+      // Fallback elegant brand text
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
       doc.setTextColor(18, 26, 52);
-      doc.text('PINNACLE BUILDERS', 14, 25);
+      doc.text('PINNACLE BUILDERS', 14, 24);
+      doc.setFillColor(254, 106, 52);
+      doc.rect(14, 26, 30, 1, 'F');
     }
 
-    // Header Right
-    doc.setFontSize(24);
-    doc.setTextColor(18, 26, 52); // Pinnacle Navy
-    doc.text('ESTIMATE REPORT', 196, 22, { align: 'right' });
-    
-    doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text(`Generated: ${timestamp}`, 196, 28, { align: 'right' });
+    // Interactive Contacts Section (Left)
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(110);
+    doc.text('Premium Architectural Roofing Systems', 14, 34);
 
-    // Contact Info
-    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
     doc.setTextColor(69, 70, 77);
-    doc.text('Pinnacle Builders', 14, 40);
-    doc.text('Industrial Area, Nairobi, Kenya', 14, 45);
-    doc.text('+254 116 893 804', 14, 50);
-    doc.text('sales@pinnacleroofing.co.ke', 14, 55);
+    doc.text('HQ Office: Industrial Area, Nairobi, Kenya', 14, 39);
 
-    // Project Details Section
-    doc.setFontSize(14);
+    // Clickable Phone
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(254, 106, 52); // Brand Orange
+    doc.text('Tel: +254 116 893 804', 14, 44);
+    doc.link(14, 41, 35, 4, { url: 'tel:+254116893804' });
+
+    // Clickable Email
+    doc.text('Email: sales@pinnacleroofing.co.ke', 14, 49);
+    doc.link(14, 46, 54, 4, { url: 'mailto:sales@pinnacleroofing.co.ke' });
+
+    // Clickable Website Link
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(18, 26, 52); // Brand Navy
+    doc.text('Visit: pinnacleroofing.co.ke', 14, 54);
+    doc.link(14, 51, 42, 4, { url: 'mailto:sales@pinnacleroofing.co.ke' }); // Uses the sales mailbox as reliable fallback, or actual site URL
+
+    // 3. HEADER RIGHT - INVOICE/REPORT SPECIFICS
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
     doc.setTextColor(18, 26, 52);
-    doc.text('PROJECT SPECIFICATIONS', 14, 70);
+    doc.text('MATERIALS ESTIMATE', 196, 22, { align: 'right' });
+
+    const reportId = `PIN-EST-${Math.floor(100000 + Math.random() * 900000)}`;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(120);
+    doc.text(`Reference ID: ${reportId}`, 196, 27, { align: 'right' });
+    doc.text(`Generated At: ${timestamp}`, 196, 32, { align: 'right' });
+    doc.text('Status: Professional Requisition', 196, 37, { align: 'right' });
+
+    // Thin elegant divider line below header
+    doc.setDrawColor(220, 225, 235);
+    doc.line(14, 58, 196, 58);
+
+    // 4. METADATA KPI CARDS (Interactive blocks)
+    // Three Cards across 182mm available width. Each card is 56mm width, separated by 7mm.
+    const cardY = 62;
+    const cardH = 22;
+    const cardW = 56;
     
+    // Card 1: TOTAL SURFACE AREA
+    doc.setFillColor(243, 246, 252);
+    doc.roundedRect(14, cardY, cardW, cardH, 2, 2, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(110);
+    doc.text('ESTIMATED SURFACE AREA', 18, cardY + 6);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(18, 26, 52);
+    doc.text(`${data.sqm.toFixed(1)} SQM`, 18, cardY + 15);
+
+    // Card 2: ROOFING SHEETS
+    doc.setFillColor(243, 246, 252);
+    doc.roundedRect(14 + cardW + 7, cardY, cardW, cardH, 2, 2, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(110);
+    doc.text('TOTAL ROOFING SHEETS', 14 + cardW + 11, cardY + 6);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(254, 106, 52); // High attention orange
+    doc.text(`${data.estimatedSheets} Pcs`, 14 + cardW + 11, cardY + 15);
+
+    // Card 3: COMPATIBLE NAILS/SCREWS
+    doc.setFillColor(243, 246, 252);
+    doc.roundedRect(14 + (cardW * 2) + 14, cardY, cardW, cardH, 2, 2, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(110);
+    doc.text('CORROSION-GUARD HARDWARE', 14 + (cardW * 2) + 18, cardY + 6);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(18, 26, 52);
+    doc.text(`${(data.estimatedSheets * 12).toLocaleString()} Pcs`, 14 + (cardW * 2) + 18, cardY + 15);
+
+    // 5. SECTION 1: ARCHITECTURAL SPECIFICATIONS TABLE
+    doc.setFillColor(18, 26, 52);
+    doc.rect(14, 91, 3, 5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(18, 26, 52);
+    doc.text('1. INTEGRATED TECHNICAL SPECIFICATIONS', 20, 95);
+
     autoTable(doc, {
-      startY: 75,
-      head: [['Specification', 'Selection']],
+      startY: 98,
+      head: [['Architectural Specification Code', 'Pinnacle Professional Selection']],
       body: [
-        ['Roofing Profile', profile.title],
-        ['Roof Color', color.name],
-        ['Polish Finish', finish.name],
-        ['Base Dimensions', `${data.length}M (Length) x ${data.width}M (Width)`],
-        ['Material Thickness', data.thickness],
-        ['Sheet Length', data.sheetLength],
-        ['Total Surface Area', `${data.sqm.toFixed(1)} SQM`],
-        ['Estimated Sheets', `${data.estimatedSheets} Units`],
-        ['Estimated Fixings', `${(data.estimatedSheets * 12).toLocaleString()} Units`],
+        ['Roofing Profile Style', `${profile.title} (Authentic Pinnacle Standard)`],
+        ['African Solar Protective Color Swatch', color.name],
+        ['Dynamic Finish / Polish Treatment', finish.name],
+        ['Base Structure Footprint Dimensions', `${data.length} Meters (Length) x ${data.width} Meters (Width)`],
+        ['Engineered Material Thickness (Gauge)', `Gauge ${data.thickness}`],
+        ['Custom Custom Cut Sheet Length', `${data.sheetLength} Meters`],
       ],
-      theme: 'grid',
-      headStyles: { fillColor: [18, 26, 52], textColor: 255, fontStyle: 'bold' },
-      alternateRowStyles: { fillColor: [248, 249, 255] },
-      styles: { cellPadding: 6, fontSize: 10 },
+      theme: 'striped',
+      headStyles: { fillColor: [18, 26, 52], textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
+      styles: { cellPadding: 4, fontSize: 8 },
+      columnStyles: { 0: { fontStyle: 'bold', cellWidth: 70 }, 1: { cellWidth: 112 } }
     });
 
-    // Cost Breakdown Section
-    const finalY = (doc as any).lastAutoTable.finalY;
+    // 6. SECTION 2: COST ESTIMATE TABLE
+    const finalTable1Y = (doc as any).lastAutoTable.finalY + 8;
     
-    doc.setFontSize(14);
+    doc.setFillColor(18, 26, 52);
+    doc.rect(14, finalTable1Y, 3, 5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
     doc.setTextColor(18, 26, 52);
-    doc.text('TECHNICAL BREAKDOWN', 14, finalY + 15);
+    doc.text('2. SPECIFIED BILL OF MATERIALS & COMMODITY PRICES', 20, finalTable1Y + 4);
 
     const fixingsCost = data.estimatedSheets * 12 * 8.5;
     const sheetsCost = data.sqm * 1250;
     const totalCost = sheetsCost + fixingsCost;
 
     autoTable(doc, {
-      startY: finalY + 20,
-      head: [['Item', 'Description', 'Unit Price', 'Total']],
+      startY: finalTable1Y + 7,
+      head: [['Product Code / Item description', 'Technical Configuration', 'Unit Rate KES', 'Net Total KES']],
       body: [
-        [`Pinnacle ${profile.title}`, `Gauge ${data.thickness} | ${finish.name} | Color: ${color.name}`, 'KES 1,250 / SQM', `KES ${sheetsCost.toLocaleString(undefined, {maximumFractionDigits: 0})}`],
-        ['Self-Drilling Screws', '65mm | Weather Guard Coating', 'KES 8.5 / Unit', `KES ${fixingsCost.toLocaleString(undefined, {maximumFractionDigits: 0})}`],
+        [
+          `Pinnacle Premium ${profile.title} Sheets`, 
+          `Gauge ${data.thickness} | Multi-Clad ${finish.name} Finish | Color Coated: ${color.name}`, 
+          'KES 1,250 / SQM', 
+          sheetsCost.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})
+        ],
+        [
+          'Weather-Guard Corrosive Resistant Screws', 
+          '65mm self-drilling metal attachment screws with EPDM sealing washer', 
+          'KES 8.5 / Pcs', 
+          fixingsCost.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})
+        ],
       ],
       foot: [
-        ['', '', 'Estimated Total', `KES ${totalCost.toLocaleString(undefined, {maximumFractionDigits: 0})}`]
+        ['ESTIMATED TOTAL CONVEYED REQUISITION', '', 'GRAND KES TOTAL', totalCost.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})]
       ],
       theme: 'grid',
-      headStyles: { fillColor: [18, 26, 52], textColor: 255, fontStyle: 'bold' },
-      footStyles: { fillColor: [254, 106, 52], textColor: 255, fontStyle: 'bold' },
-      alternateRowStyles: { fillColor: [248, 249, 255] },
-      styles: { cellPadding: 6, fontSize: 10 },
+      headStyles: { fillColor: [18, 26, 52], textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
+      footStyles: { fillColor: [254, 106, 52], textColor: 255, fontStyle: 'bold', fontSize: 9 },
+      styles: { cellPadding: 4.5, fontSize: 8 },
+      columnStyles: { 0: { fontStyle: 'bold' } }
     });
 
-    // Footer in PDF
+    // 7. MULTI-LAYER CAPTIVATING DESIGN PIECE (Technical Advisory Notice & Call to action)
+    const finalTable2Y = (doc as any).lastAutoTable.finalY + 8;
+
+    // Technical Warrant Shield
+    doc.setFillColor(255, 249, 246); // Tender light orange/cream bg
+    doc.setDrawColor(254, 106, 52, 0.4); // Subtle Orange Border style
+    doc.roundedRect(14, finalTable2Y, 182, 22, 1.5, 1.5, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(254, 106, 52);
+    doc.text('PINNACLE 15-YEAR GUARANTEE & STRUCTURAL INTEGRITY', 18, finalTable2Y + 5);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(80);
+    // Multi line wrapping of message text
+    const warrantyText = "These high-durability roofing estimates are covered by our certified 15-Year Multi-Clad UV Anti-Fade guarantee when combined with authentic Pinnacle Weather-Guard self-drilling fasteners. We strongly request a site validation before loading physical roof frame timber boards.";
+    doc.text(doc.splitTextToSize(warrantyText, 174), 18, finalTable2Y + 11);
+
+    // Interactive CTA Consulting Banner
+    const bannerY = finalTable2Y + 27;
+    doc.setFillColor(18, 26, 52); // Brand Navy Block
+    doc.roundedRect(14, bannerY, 182, 28, 1.5, 1.5, 'F');
+
+    // Right-hand side Whatsapp button indicator box inside banner
+    doc.setFillColor(254, 106, 52); // Bright Brand Orange
+    doc.roundedRect(138, bannerY + 6, 52, 16, 1, 1, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(255);
+    doc.text('TALK TO INTEGRATION LEAD', 142, bannerY + 15);
+    
+    // Set WhatsApp URL Link directly on top of the orange button
+    doc.link(138, bannerY + 6, 52, 16, { url: 'https://wa.me/254116893804' });
+
+    // Left block of banner text
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    doc.setTextColor(254, 106, 52); // Orange title
+    doc.text('READY TO SECURE ARCHITECTURAL QUALITY?', 18, bannerY + 8);
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(255);
+    doc.text('Confirm dynamic project details, order raw sheet colors, and plan certified onsite', 18, bannerY + 14);
+    doc.text('dimensional validations with our structural tech engineers instantly.', 18, bannerY + 19);
+
+    // 8. PAGE FOOTER SYSTEM (Dynamic Page numbering & Standards)
     const pageCount = doc.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       
-      // Draw a line
-      doc.setDrawColor(200);
+      doc.setDrawColor(220, 225, 235);
       doc.line(14, 280, 196, 280);
 
-      doc.setFontSize(8);
-      doc.setTextColor(150);
-      doc.text('Pinnacle Builders | The Standard of Steel', 14, 287);
-      doc.text(`Page ${i} of ${pageCount}`, 196, 287, { align: 'right' });
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(18, 26, 52);
+      doc.text('PINNACLE BUILDERS • Premium Steel Standard', 14, 286);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.text('Site Inspections • Multi-Clad Coating • Kenyan KEBS Standard', 14, 290);
+      
+      doc.text(`Page ${i} of ${pageCount}`, 196, 286, { align: 'right' });
     }
 
     doc.save(`Pinnacle_Estimate_${profile.title.replace(/\s+/g, '_')}.pdf`);
