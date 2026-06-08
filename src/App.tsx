@@ -11,7 +11,7 @@ import { ProfileSelection } from './components/ProfileSelection';
 import { ColorSelection } from './components/ColorSelection';
 import { Measurements } from './components/Measurements';
 import { Summary } from './components/Summary';
-import { RoofingProfile, COLOR_OPTIONS, ColorOption } from './constants';
+import { RoofingProfile, COLOR_OPTIONS, ColorOption, FINISH_OPTIONS, FinishOption } from './constants';
 
 type Page = 'profiles' | 'color' | 'measurements' | 'summary';
 
@@ -19,6 +19,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('profiles');
   const [selectedProfile, setSelectedProfile] = useState<RoofingProfile | null>(null);
   const [selectedColor, setSelectedColor] = useState<ColorOption>(COLOR_OPTIONS[0]);
+  const [selectedFinish, setSelectedFinish] = useState<FinishOption>(FINISH_OPTIONS[0]);
   const [measurementData, setMeasurementData] = useState<any>(null);
 
   const handleNavigate = (page: string) => {
@@ -62,7 +63,9 @@ export default function App() {
           <ColorSelection 
             selectedProfile={selectedProfile}
             selectedColor={selectedColor}
+            selectedFinish={selectedFinish}
             onColorSelect={handleColorSelect}
+            onFinishSelect={setSelectedFinish}
             onNext={() => handleNavigate('measurements')}
             onBack={() => handleNavigate('profiles')}
           />
@@ -79,6 +82,7 @@ export default function App() {
           <Summary 
             profile={selectedProfile} 
             color={selectedColor}
+            finish={selectedFinish}
             data={measurementData} 
           />
         )}

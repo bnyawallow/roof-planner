@@ -69,6 +69,30 @@ export interface ColorOption {
   vibe: string;
 }
 
+export type FinishType = 'matte' | 'gloss';
+
+export interface FinishOption {
+  id: FinishType;
+  name: string;
+  description: string;
+  vibe: string;
+}
+
+export const FINISH_OPTIONS: FinishOption[] = [
+  {
+    id: 'matte',
+    name: 'Textured Matte',
+    description: 'A granular, non-reflective powder-coated texture designed for elegant premium anti-glare looks.',
+    vibe: 'Classic Slate Look'
+  },
+  {
+    id: 'gloss',
+    name: 'Brilliant Gloss',
+    description: 'A high-reflectivity, smooth surface that accentuates depth, curves and metallic profiles under direct sunlight.',
+    vibe: 'Contemporary Lustre'
+  }
+];
+
 export const COLOR_OPTIONS: ColorOption[] = [
   {
     id: 'charcoal',
