@@ -1,0 +1,12 @@
+services:
+  roofplanner:
+    image: ghcr.io/bnyawallow/roofplanner2:latest
+    container_name: roofplanner
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.roofplanner.rule=Host(`roofplanner.creativefringe.digital`)
+      - traefik.http.routers.roofplanner.entrypoints=websecure
+      - traefik.http.routers.roofplanner.tls=true
+      - traefik.http.routers.roofplanner.tls.certresolver=letsencrypt
+      - traefik.http.services.roofplanner.loadbalancer.server.port=80
