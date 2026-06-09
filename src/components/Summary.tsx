@@ -481,7 +481,7 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
                 rel="noopener noreferrer"
                 className="bg-whatsapp-green w-full py-4 rounded-md flex items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-[#20bd5a] active:scale-95 shadow-ambient group">
                 <MessageSquare className="w-6 h-6 fill-current group-hover:scale-110 transition-transform" />
-                <span className="font-bold text-sm font-sans">Free Chat</span>
+                <span className="font-bold text-sm font-sans">FREE CONSULT</span>
               </a>
             </div>
             <div className="mt-auto pt-12">

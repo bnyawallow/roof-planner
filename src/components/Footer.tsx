@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
               className="inline-flex items-center gap-2 bg-whatsapp-green hover:brightness-110 text-white px-6 py-3 rounded-md font-bold text-xs transition-all active:scale-95 shadow-ambient font-sans"
             >
               <MessageSquare className="w-4 h-4 fill-current" />
-              Free Chat
+              FREE CONSULT
             </a>
           </div>
         </div>
