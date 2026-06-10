@@ -1,8 +1,8 @@
-import boxProfileImg from './assets/images/images/box_profile.png';
-import classicTileImg from './assets/images/images/classic_tile.png';
-import corrugatedSheetImg from './assets/images/images/corrugated_sheet.png';
-import ecospanTileImg from './assets/images/images/ecospan_mabati.png';
-import britonTileImg from './assets/images/images/briton_tile.png';
+import boxProfileImg from './assets/images/box_profile.png';
+import classicTileImg from './assets/images/classic_tile.png';
+import corrugatedSheetImg from './assets/images/corrugated_sheet.png';
+import ecospanTileImg from './assets/images/ecospan_mabati.png';
+import britonTileImg from './assets/images/briton_tile.png';
 
 export interface RoofingProfile {
   id: string;
