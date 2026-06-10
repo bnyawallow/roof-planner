@@ -1,3 +1,9 @@
+import boxProfileImg from './assets/images/images/box_profile.png';
+import classicTileImg from './assets/images/images/classic_tile.png';
+import corrugatedSheetImg from './assets/images/images/corrugated_sheet.png';
+import ecospanTileImg from './assets/images/images/ecospan_mabati.png';
+import britonTileImg from './assets/images/images/briton_tile.png';
+
 export interface RoofingProfile {
   id: string;
   title: string;
@@ -15,7 +21,7 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     id: "box-profile",
     title: "Box Profile",
     description: "High-precision angular ribs for superior load-bearing capacity.",
-    image: "/images/box_profile.png",
+    image: boxProfileImg,
     category: "Pinnacle",
     specs: {
       effectiveWidth: "880mm",
@@ -26,28 +32,28 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     id: "classic-tile",
     title: "Classic Tile",
     description: "Architectural elegance of traditional tiles with the durability of lightweight steel.",
-    image: "/images/classic_tile.png",
+    image: classicTileImg,
     category: "Pinnacle"
   },
   {
     id: "corrugated-sheets",
     title: "Corrugated Sheet",
     description: "The classic, time-tested waveform for optimal drainage.",
-    image: "/images/corrugated_sheet.png",
+    image: corrugatedSheetImg,
     category: "Colored"
   },
   {
     id: "ecospan-tile",
     title: "EcoSpan Tile",
     description: "Modern roofing with a unique design, cost-effective and durable solution for contemporary builds.",
-    image: "/images/ecospan_mabati.png",
+    image: ecospanTileImg,
     category: "Pinnacle Builders"
   },
   {
     id: "briton-tile",
     title: "Briton Tile",
     description: "A classic aesthetic with high strength, perfectly suited for Kenyan architectural heritage.",
-    image: "/images/briton_tile.png",
+    image: britonTileImg,
     category: "Pinnacle"
   },
   {

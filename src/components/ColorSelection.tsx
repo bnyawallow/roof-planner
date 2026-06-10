@@ -67,33 +67,43 @@ export const ColorSelection: React.FC<ColorSelectionProps> = ({
             </div>
 
             {/* Simulated 3D Roofing Sheet Card with interactive Finish Effects */}
-            <div className="relative rounded-xl overflow-hidden bg-slate-900 aspect-[16/10] sm:aspect-[16/9] border border-slate-800 shadow-xl group">
-              {/* Profile Image Base */}
+            <div className="relative rounded-xl overflow-hidden bg-slate-100 aspect-[16/10] sm:aspect-[16/9] border border-surface-container-high shadow-xl group">
+              {/* Profile Image Base - Converted to grayscale and contrast boosted for optimal coloring base */}
               <img 
                 src={selectedProfile.image} 
                 alt={selectedProfile.title} 
-                className="w-full h-full object-cover select-none transition-transform duration-500 ease-out"
+                className="w-full h-full object-cover select-none transition-transform duration-500 ease-out grayscale contrast-125 brightness-110"
                 referrerPolicy="no-referrer"
               />
 
-              {/* Advanced Colorized Overlay System */}
+              {/* Fundamental Color overlay: Maps the hue to the grayscale midtones */}
               <div 
-                className="absolute inset-0 transition-all duration-700 ease-in-out pointer-events-none"
+                className="absolute inset-0 transition-colors duration-700 ease-in-out pointer-events-none"
                 style={{ 
                   backgroundColor: selectedColor.hex, 
                   mixBlendMode: 'color', 
-                  opacity: selectedColor.opacity 
+                  opacity: 0.9
                 }}
               />
 
-              {/* Additional Multi-Layer Highlight blend to enrich Red/Green/Brown depths */}
+              {/* Richness and Contrast overlay: Deepens the color in shadows, boosts light highlights */}
+              <div 
+                className="absolute inset-0 transition-colors duration-700 ease-in-out pointer-events-none"
+                style={{ 
+                  backgroundColor: selectedColor.hex, 
+                  mixBlendMode: 'overlay', 
+                  opacity: selectedColor.id === 'charcoal' ? 0.3 : 0.65 
+                }}
+              />
+
+              {/* Multi-clad Burn filter for deeper shades like chocolate and dark green to look richer instead of flat */}
               {selectedColor.id !== 'charcoal' && (
                 <div 
-                  className="absolute inset-0 transition-all duration-700 ease-in-out pointer-events-none"
+                  className="absolute inset-0 transition-colors duration-700 ease-in-out pointer-events-none"
                   style={{ 
                     backgroundColor: selectedColor.hex, 
-                    mixBlendMode: 'multiply', 
-                    opacity: 0.25 
+                    mixBlendMode: 'color-burn', 
+                    opacity: 0.15 
                   }}
                 />
               )}
