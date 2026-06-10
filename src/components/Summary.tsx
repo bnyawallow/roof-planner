@@ -219,18 +219,27 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
     doc.setTextColor(18, 26, 52);
     doc.text('1. INTEGRATED TECHNICAL SPECIFICATIONS', 20, 90);
 
+    const bodyRows = [
+      ['Roofing Profile Style', `${profile.title} (Authentic Pinnacle Standard)`],
+      ['African Solar Protective Color Swatch', color.name],
+      ['Dynamic Finish / Polish Treatment', finish.name],
+      ['Roof Architectural Shape', `${data.shape ? data.shape.charAt(0).toUpperCase() + data.shape.slice(1) : 'Gable'}`],
+    ];
+    if (data.shape === 'hip') {
+      bodyRows.push(['Hip Structural Runs (Side x End)', `${data.sideRun?.toFixed(2)}m (Side) x ${data.endRun?.toFixed(2)}m (End)`]);
+    }
+    bodyRows.push(
+      ['Base Footprint Dimensions', `${data.length} Meters (L) x ${data.width} Meters (W)`],
+      ['Pitch Angle & Overhang', `${data.pitch ? data.pitch + '°' : '30°'} Pitch | ${data.overhang ? data.overhang.toFixed(1) : '0.6'}m Overhang`],
+      ['Engineered Material Thickness (Gauge)', `Gauge ${data.thickness}`],
+      ['Custom Custom Cut Sheet Length', `${data.sheetLength}`]
+    );
+
     autoTable(doc, {
       startY: 93,
       margin: { bottom: 25, top: 20, left: 14, right: 14 },
       head: [['Architectural Specification Code', 'Pinnacle Professional Selection']],
-      body: [
-        ['Roofing Profile Style', `${profile.title} (Authentic Pinnacle Standard)`],
-        ['African Solar Protective Color Swatch', color.name],
-        ['Dynamic Finish / Polish Treatment', finish.name],
-        ['Base Structure Footprint Dimensions', `${data.length} Meters (Length) x ${data.width} Meters (Width)`],
-        ['Engineered Material Thickness (Gauge)', `Gauge ${data.thickness}`],
-        ['Custom Custom Cut Sheet Length', `${data.sheetLength} Meters`],
-      ],
+      body: bodyRows,
       theme: 'striped',
       headStyles: { 
         fillColor: [18, 26, 52], 
