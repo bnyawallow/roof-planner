@@ -3,7 +3,7 @@ import { cn } from '../lib/utils';
 import { Check } from 'lucide-react';
 
 interface StepIndicatorProps {
-  currentPage: 'profiles' | 'color' | 'measurements' | 'summary';
+  currentPage: 'profiles' | 'options' | 'measurements' | 'summary';
   onNavigate: (page: string) => void;
   selectedProfile: boolean;
   selectedColor: boolean;
@@ -19,7 +19,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
 }) => {
   const steps = [
     { id: 'profiles', label: 'Profile' },
-    { id: 'color', label: 'Color' },
+    { id: 'options', label: 'Options' },
     { id: 'measurements', label: 'Measurements' },
     { id: 'summary', label: 'Summary' },
   ];
@@ -31,7 +31,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
     if (stepId === 'profiles') {
       return selectedProfile ? 'completed' : 'upcoming';
     }
-    if (stepId === 'color') {
+    if (stepId === 'options') {
       return (selectedProfile && (currentPage === 'measurements' || currentPage === 'summary' || measurementData)) ? 'completed' : 'upcoming';
     }
     if (stepId === 'measurements') {
@@ -51,7 +51,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
           const isClickable = 
             status === 'completed' ||
             step.id === 'profiles' ||
-            (step.id === 'color' && selectedProfile) ||
+            (step.id === 'options' && selectedProfile) ||
             (step.id === 'measurements' && selectedProfile && (currentPage === 'measurements' || currentPage === 'summary' || measurementData)) ||
             (step.id === 'summary' && selectedProfile && measurementData);
 

@@ -4,7 +4,7 @@ import { CheckCircle2, ArrowRight, ShieldCheck, Paintbrush, Sparkles } from 'luc
 import { RoofingProfile, COLOR_OPTIONS, ColorOption, FINISH_OPTIONS, FinishOption } from '../constants';
 import { cn } from '../lib/utils';
 
-interface ColorSelectionProps {
+interface OptionsSelectionProps {
   selectedProfile: RoofingProfile;
   selectedColor: ColorOption;
   selectedFinish: FinishOption;
@@ -14,7 +14,7 @@ interface ColorSelectionProps {
   onBack: () => void;
 }
 
-export const ColorSelection: React.FC<ColorSelectionProps> = ({
+export const OptionsSelection: React.FC<OptionsSelectionProps> = ({
   selectedProfile,
   selectedColor,
   selectedFinish,
@@ -39,7 +39,7 @@ export const ColorSelection: React.FC<ColorSelectionProps> = ({
           </button>
         </div>
         <h1 className="font-headline text-4xl md:text-5xl font-black tracking-[-0.02em] text-primary-container leading-tight">
-          Select Your <br/><span className="text-secondary-container">Color & Finish</span>
+          Select Your <br/><span className="text-secondary-container">Options</span>
         </h1>
         <p className="mt-6 text-on-surface-variant max-w-2xl text-lg leading-relaxed font-sans font-medium">
           Choose the perfect dynamic color and aesthetic finish for your selected <strong className="text-primary-container font-extrabold">{selectedProfile.title}</strong> profile. All Pinnacle finishes use premium Multi-Clad technology for long-lasting vibrant UV protection and weather resilience.

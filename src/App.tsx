@@ -8,12 +8,12 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { StepIndicator } from './components/StepIndicator';
 import { ProfileSelection } from './components/ProfileSelection';
-import { ColorSelection } from './components/ColorSelection';
+import { OptionsSelection } from './components/OptionsSelection';
 import { Measurements } from './components/Measurements';
 import { Summary } from './components/Summary';
 import { RoofingProfile, COLOR_OPTIONS, ColorOption, FINISH_OPTIONS, FinishOption } from './constants';
 
-type Page = 'profiles' | 'color' | 'measurements' | 'summary';
+type Page = 'profiles' | 'options' | 'measurements' | 'summary';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('profiles');
@@ -32,7 +32,7 @@ export default function App() {
     if (profile.id === 'stone-coated-shingles') {
       setSelectedFinish(FINISH_OPTIONS[0]); // Force matte
     }
-    setCurrentPage('color');
+    setCurrentPage('options');
     window.scrollTo(0, 0);
   };
 
@@ -62,8 +62,8 @@ export default function App() {
           <ProfileSelection onSelect={handleProfileSelect} />
         )}
 
-        {currentPage === 'color' && selectedProfile && (
-          <ColorSelection 
+        {currentPage === 'options' && selectedProfile && (
+          <OptionsSelection 
             selectedProfile={selectedProfile}
             selectedColor={selectedColor}
             selectedFinish={selectedFinish}
