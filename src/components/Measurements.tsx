@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle, Circle, Ruler, Check, ChevronUp, ChevronDown } from 'lucide-react';
-import { RoofingProfile } from '../constants';
+import { RoofingProfile, ColorOption, FinishOption } from '../constants';
 import { cn } from '../lib/utils';
 
 interface MeasurementsProps {
   selectedProfile: RoofingProfile;
+  selectedColor: ColorOption;
+  selectedFinish: FinishOption;
   onComplete: (data: any) => void;
 }
 
@@ -43,7 +45,7 @@ const CustomNumberInput = ({ value, onChange, placeholder, step = 0.5, min = 0 }
   );
 };
 
-export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onComplete }) => {
+export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, selectedColor, selectedFinish, onComplete }) => {
   const [shape, setShape] = useState<RoofShape>('gable');
   const [skillionDirection, setSkillionDirection] = useState<'right-to-left'|'left-to-right'|'front-to-back'|'back-to-front'>('front-to-back');
   const [length, setLength] = useState<string>('12.5');
@@ -89,7 +91,65 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
 
   const estimatedSheets = Math.ceil(trueSqm / 2.4);
 
+  
+  const adjustColor = (hex, amount) => {
+    let r = parseInt(hex.substring(1,3), 16);
+    let g = parseInt(hex.substring(3,5), 16);
+    let b = parseInt(hex.substring(5,7), 16);
+    r = Math.min(255, Math.max(0, r + amount));
+    g = Math.min(255, Math.max(0, g + amount));
+    b = Math.min(255, Math.max(0, b + amount));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  const RoofPolygon = ({ points, fill, stroke, strokeWidth }: any) => (
+    <>
+      <polygon points={points} fill={fill} stroke={stroke} strokeWidth={strokeWidth} />
+      <polygon points={points} fill="url(#roofPattern)" stroke="none" />
+    </>
+  );
+
   const renderVisualization = () => {
+    // Dynamic Colors
+    const baseColor = selectedColor.hex;
+    const isGloss = selectedFinish.id === 'gloss';
+    
+    // Top view gradients
+    const c1_1 = adjustColor(baseColor, isGloss ? 40 : 10);
+    const c1_2 = adjustColor(baseColor, isGloss ? -20 : -10);
+    
+    const c2_1 = adjustColor(baseColor, isGloss ? 20 : 0);
+    const c2_2 = adjustColor(baseColor, isGloss ? -30 : -20);
+    
+    const c3_1 = adjustColor(baseColor, isGloss ? 0 : -10);
+    const c3_2 = adjustColor(baseColor, isGloss ? -40 : -30);
+    
+    // Front view gradients
+    const cf_1 = adjustColor(baseColor, isGloss ? 30 : 5);
+    const cf_2 = adjustColor(baseColor, isGloss ? -10 : -15);
+    
+    // Side view gradients
+    const cs_1 = adjustColor(baseColor, isGloss ? 10 : -5);
+    const cs_2 = adjustColor(baseColor, isGloss ? -20 : -25);
+    
+    const renderPattern = () => {
+      switch(selectedProfile.id) {
+        case 'box-profile':
+          return <pattern id="roofPattern" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><path d="M1,0 L1,3" stroke="#ffffff" strokeWidth="0.3" opacity="0.15"/></pattern>;
+        case 'corrugated-sheets':
+          return <pattern id="roofPattern" width="1.5" height="1.5" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><path d="M0.5,0 L0.5,1.5" stroke="#ffffff" strokeWidth="0.2" opacity="0.2"/></pattern>;
+        case 'classic-tile':
+        case 'briton-tile': // Just in case
+          return <pattern id="roofPattern" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><path d="M0,1 L2,1 M1,0 L1,2" stroke="#000000" strokeWidth="0.1" opacity="0.25"/><path d="M0,1.1 L2,1.1 M1.1,0 L1.1,2" stroke="#ffffff" strokeWidth="0.1" opacity="0.15"/></pattern>;
+        case 'stone-coated-shingles':
+          return <pattern id="roofPattern" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><circle cx="0.5" cy="0.5" r="0.3" fill="#ffffff" opacity="0.15"/><circle cx="1.5" cy="1.5" r="0.2" fill="#000000" opacity="0.15"/></pattern>;
+        case 'ecospan-tile':
+          return <pattern id="roofPattern" width="4" height="2" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><path d="M0,1 L4,1 M2,0 L2,2" stroke="#000000" strokeWidth="0.15" opacity="0.2"/></pattern>;
+        default:
+          return <pattern id="roofPattern" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="none"/></pattern>;
+      }
+    };
+
     const maxBase = Math.max(l, w, 0.1); 
     const O = overhang;
     const maxExtent = maxBase + O * 2;
@@ -109,17 +169,15 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
            </h4>
            <svg viewBox="-5 -5 110 110" className="w-full h-full drop-shadow-xl overflow-visible transition-all duration-500 ease-in-out">
             <defs>
+              {renderPattern()}
               <linearGradient id="roofGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#253569" />
-                <stop offset="100%" stopColor="#121a34" />
+                <stop offset="0%" stopColor={c1_1} /><stop offset="100%" stopColor={c1_2} />
               </linearGradient>
               <linearGradient id="roofGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#31427d" />
-                <stop offset="100%" stopColor="#1a2444" />
+                <stop offset="0%" stopColor={c2_1} /><stop offset="100%" stopColor={c2_2} />
               </linearGradient>
               <linearGradient id="roofGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#1e2a52" />
-                <stop offset="100%" stopColor="#0a0f21" />
+                <stop offset="0%" stopColor={c3_1} /><stop offset="100%" stopColor={c3_2} />
               </linearGradient>
             </defs>
             <g className="animate-in fade-in zoom-in-95 duration-300">
@@ -138,8 +196,8 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                    <>
                      {shape === 'gable' && (
                        <>
-                         <polygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${roofX2},50 ${roofX1},50`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="0.5" />
-                         <polygon points={`${roofX1},50 ${roofX2},50 ${roofX2},${roofY2} ${roofX1},${roofY2}`} fill="url(#roofGradient2)" stroke="#fe6a34" strokeWidth="0.5" />
+                         <RoofPolygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${roofX2},50 ${roofX1},50`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="0.5" />
+                         <RoofPolygon points={`${roofX1},50 ${roofX2},50 ${roofX2},${roofY2} ${roofX1},${roofY2}`} fill="url(#roofGradient2)" stroke="#fe6a34" strokeWidth="0.5" />
                          <line x1={roofX1} y1="50" x2={roofX2} y2="50" stroke="#fe6a34" strokeWidth="1.5" />
                        </>
                      )}
@@ -155,10 +213,10 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
 
                        return (
                          <>
-                           <polygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${rx2},${ry1} ${rx1},${ry1}`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="0.5" />
-                           <polygon points={`${roofX1},${roofY2} ${roofX2},${roofY2} ${rx2},${ry2} ${rx1},${ry2}`} fill="url(#roofGradient2)" stroke="#fe6a34" strokeWidth="0.5" />
-                           <polygon points={`${roofX1},${roofY1} ${rx1},${ry1} ${rx1},${ry2} ${roofX1},${roofY2}`} fill="url(#roofGradient3)" stroke="#fe6a34" strokeWidth="0.5" />
-                           <polygon points={`${roofX2},${roofY1} ${rx2},${ry1} ${rx2},${ry2} ${roofX2},${roofY2}`} fill="url(#roofGradient3)" stroke="#fe6a34" strokeWidth="0.5" />
+                           <RoofPolygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${rx2},${ry1} ${rx1},${ry1}`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="0.5" />
+                           <RoofPolygon points={`${roofX1},${roofY2} ${roofX2},${roofY2} ${rx2},${ry2} ${rx1},${ry2}`} fill="url(#roofGradient2)" stroke="#fe6a34" strokeWidth="0.5" />
+                           <RoofPolygon points={`${roofX1},${roofY1} ${rx1},${ry1} ${rx1},${ry2} ${roofX1},${roofY2}`} fill="url(#roofGradient3)" stroke="#fe6a34" strokeWidth="0.5" />
+                           <RoofPolygon points={`${roofX2},${roofY1} ${rx2},${ry1} ${rx2},${ry2} ${roofX2},${roofY2}`} fill="url(#roofGradient3)" stroke="#fe6a34" strokeWidth="0.5" />
                            <line x1={rx1} y1={ry1} x2={rx2} y2={ry1} stroke="#fe6a34" strokeWidth="1" />
                            {ry1 !== ry2 && <line x1={rx1} y1={ry2} x2={rx2} y2={ry2} stroke="#fe6a34" strokeWidth="1" />}
                            {ry1 !== ry2 && <line x1={rx1} y1={ry1} x2={rx1} y2={ry2} stroke="#fe6a34" strokeWidth="1" />}
@@ -170,7 +228,7 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                      {shape === 'skillion' && (() => {
                         return (
                           <>
-                            <polygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${roofX2},${roofY2} ${roofX1},${roofY2}`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="1" />
+                            <RoofPolygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${roofX2},${roofY2} ${roofX1},${roofY2}`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="1" />
                             {skillionDirection === 'front-to-back' && <path d="M50,30 L50,70 M45,65 L50,70 L55,65" fill="none" stroke="#fe6a34" strokeWidth="2" strokeOpacity="0.7" />}
                             {skillionDirection === 'back-to-front' && <path d="M50,70 L50,30 M45,35 L50,30 L55,35" fill="none" stroke="#fe6a34" strokeWidth="2" strokeOpacity="0.7" />}
                             {skillionDirection === 'left-to-right' && <path d="M30,50 L70,50 M65,45 L70,50 L65,55" fill="none" stroke="#fe6a34" strokeWidth="2" strokeOpacity="0.7" />}
@@ -213,9 +271,9 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
             </h4>
             <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md overflow-visible transition-all duration-300">
               <defs>
+              {renderPattern()}
                 <linearGradient id="roofGradient2_front" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#31427d" />
-                  <stop offset="100%" stopColor="#1a2444" />
+                  <stop offset="0%" stopColor={cf_1} /><stop offset="100%" stopColor={cf_2} />
                 </linearGradient>
               </defs>
               {(() => {
@@ -241,24 +299,24 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                     <path d={`M${rX1},${roofTopY - 5} L${rX2},${roofTopY - 5} M${rX1},${roofTopY - 6} L${rX1},${roofTopY - 4} M${rX2},${roofTopY - 6} L${rX2},${roofTopY - 4}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-300" />
                     
                     {shape === 'gable' && (
-                      <polygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2},${roofTopY} ${rX1},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      <RoofPolygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2},${roofTopY} ${rX1},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                     )}
                     {shape === 'hip' && (() => {
                       const pullIn = Math.min((sRun * scale), frontRoofW / 2);
                       return (
-                        <polygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2 - pullIn},${roofTopY} ${rX1 + pullIn},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                        <RoofPolygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2 - pullIn},${roofTopY} ${rX1 + pullIn},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                       );
                     })()}
                     {shape === 'skillion' && (() => {
                       if (skillionDirection === 'left-to-right') {
                         // High left, low right (wedge pointing right)
-                        return <polygon points={`${rX1},${roofTopY} ${rX2},${frontY} ${rX1},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                        return <RoofPolygon points={`${rX1},${roofTopY} ${rX2},${frontY} ${rX1},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                       } else if (skillionDirection === 'right-to-left') {
                         // High right, low left (wedge pointing left)
-                        return <polygon points={`${rX1},${frontY} ${rX2},${roofTopY} ${rX2},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                        return <RoofPolygon points={`${rX1},${frontY} ${rX2},${roofTopY} ${rX2},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                       } else {
                         // Front-to-back flow looks like a flat rectangle from the front
-                        return <polygon points={`${rX1},${roofTopY} ${rX2},${roofTopY} ${rX2},${frontY} ${rX1},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                        return <RoofPolygon points={`${rX1},${roofTopY} ${rX2},${roofTopY} ${rX2},${frontY} ${rX1},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                       }
                     })()}
                   </g>
@@ -274,9 +332,9 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
             </h4>
             <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md overflow-visible transition-all duration-300">
               <defs>
+              {renderPattern()}
                 <linearGradient id="roofGradient1_side" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#253569" />
-                  <stop offset="100%" stopColor="#121a34" />
+                  <stop offset="0%" stopColor={cs_1} /><stop offset="100%" stopColor={cs_2} />
                 </linearGradient>
               </defs>
               {(() => {
@@ -302,24 +360,24 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                     <path d={`M${rX1},${roofTopY - 5} L${rX2},${roofTopY - 5} M${rX1},${roofTopY - 6} L${rX1},${roofTopY - 4} M${rX2},${roofTopY - 6} L${rX2},${roofTopY - 4}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-300" />
                     
                     {shape === 'gable' && (
-                      <polygon points={`${rX1},${sideY} ${rX2},${sideY} 50,${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      <RoofPolygon points={`${rX1},${sideY} ${rX2},${sideY} 50,${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                     )}
                     {shape === 'hip' && (() => {
                       const pullInW = Math.min((eRun * scale), sideRoofW / 2);
                       return (
-                        <polygon points={`${rX1},${sideY} ${rX2},${sideY} ${rX2 - pullInW},${roofTopY} ${rX1 + pullInW},${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                        <RoofPolygon points={`${rX1},${sideY} ${rX2},${sideY} ${rX2 - pullInW},${roofTopY} ${rX1 + pullInW},${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                       );
                     })()}
                     {shape === 'skillion' && (() => {
                       if (skillionDirection === 'front-to-back') {
                         // High front (left side of SVG), low back (right side)
-                        return <polygon points={`${rX1},${roofTopY} ${rX2},${sideY} ${rX1},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                        return <RoofPolygon points={`${rX1},${roofTopY} ${rX2},${sideY} ${rX1},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                       } else if (skillionDirection === 'back-to-front') {
                         // Low front (left side), high back (right side)
-                        return <polygon points={`${rX1},${sideY} ${rX2},${roofTopY} ${rX2},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                        return <RoofPolygon points={`${rX1},${sideY} ${rX2},${roofTopY} ${rX2},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                       } else {
                         // side view for left/right flow is a flat rectangle
-                        return <polygon points={`${rX1},${roofTopY} ${rX2},${roofTopY} ${rX2},${sideY} ${rX1},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                        return <RoofPolygon points={`${rX1},${roofTopY} ${rX2},${roofTopY} ${rX2},${sideY} ${rX1},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                       }
                     })()}
                   </g>

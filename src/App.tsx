@@ -77,6 +77,8 @@ export default function App() {
         {currentPage === 'measurements' && selectedProfile && (
           <Measurements 
             selectedProfile={selectedProfile} 
+            selectedColor={selectedColor}
+            selectedFinish={selectedFinish}
             onComplete={handleMeasurementsComplete} 
           />
         )}
