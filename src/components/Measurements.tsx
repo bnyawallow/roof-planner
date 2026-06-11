@@ -58,6 +58,7 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
   const [hipSideRun, setHipSideRun] = useState<string>('');
   const [hipEndRun, setHipEndRun] = useState<string>('');
   const [isAdvancedMode, setIsAdvancedMode] = useState<boolean>(false);
+  const [activeView, setActiveView] = useState<'top' | 'front' | 'side' | 'all'>('all');
 
   // Calculations
   const l = parseFloat(length) || 1; // avoid / 0
@@ -162,12 +163,30 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
     return (
       <div className="w-full flex flex-col md:flex-row h-[400px] md:h-[450px] bg-[#eaeff7] rounded-lg border border-surface-container-high relative overflow-hidden transition-all">
         
-        {/* Left Panel: Top View */}
-        <div className="w-full md:w-1/2 h-1/2 md:h-full border-b md:border-b-0 md:border-r border-[#cdd5e0] relative flex items-center justify-center p-4">
-           <h4 className="absolute top-4 left-4 font-bold text-primary-container text-xs font-sans z-10 flex items-center gap-2">
-             Top View
-           </h4>
-           <svg viewBox="-5 -5 110 110" className="w-full h-full drop-shadow-xl overflow-visible transition-all duration-500 ease-in-out">
+        {/* Toggle Controls */}
+        <div className="absolute top-4 right-4 z-20 flex bg-white/80 backdrop-blur rounded-[8px] p-1 shadow-sm border border-surface-container-high">
+          {['top', 'front', 'side', 'all'].map(v => (
+            <button
+              key={v}
+              onClick={() => setActiveView(v as any)}
+              className={cn(
+                "px-3 py-1.5 text-xs font-bold font-sans rounded-[6px] capitalize transition-colors",
+                activeView === v ? "bg-primary-container text-white" : "text-on-surface-variant hover:text-primary-container hover:bg-black/5"
+              )}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+
+        {(activeView === 'top' || activeView === 'all') && (
+          <div className={cn("relative flex items-center justify-center p-4 transition-all duration-500", 
+             activeView === 'all' ? "w-full md:w-1/2 h-1/2 md:h-full border-b md:border-b-0 md:border-r border-[#cdd5e0]" : "w-full h-full"
+          )}>
+            <h4 className="absolute top-4 left-4 font-bold text-primary-container text-xs font-sans z-10 flex items-center gap-2">
+              Top View
+            </h4>
+            <svg viewBox="-5 -5 110 110" className="w-full h-full drop-shadow-xl overflow-visible transition-all duration-500 ease-in-out">
             <defs>
               {renderPattern()}
               <linearGradient id="roofGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -203,8 +222,8 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
                      )}
                      
                      {shape === 'hip' && (() => {
-                       const er = Math.min(eRun * scale, houseW / 2 + OScale);
-                       const sr = Math.min(sRun * scale, houseH / 2 + OScale);
+                       const er = Math.min((eRun + O) * scale, houseW / 2 + OScale);
+                       const sr = Math.min((sRun + O) * scale, houseH / 2 + OScale);
                        
                        const rx1 = Math.min(roofX1 + er, 50);
                        const rx2 = Math.max(roofX2 - er, 50);
@@ -259,13 +278,134 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
                })()}
             </g>
            </svg>
-        </div>
+          </div>
+        )}
 
-        {/* Right Panel: Divider for Front & Side Views */}
-        <div className="flex w-full md:w-1/2 h-1/2 md:h-full flex-col">
-          
-          {/* Top Right: Front View */}
-          <div className="h-1/2 border-b border-[#cdd5e0] relative flex items-center justify-center p-4">
+        {activeView === 'all' && (
+          <div className="flex w-full md:w-1/2 h-1/2 md:h-full flex-col">
+            <div className="h-1/2 border-b border-[#cdd5e0] relative flex items-center justify-center p-4">
+              <h4 className="absolute top-4 left-4 font-bold text-primary-container text-xs font-sans z-10 flex items-center gap-2">
+                 Front View
+              </h4>
+              <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md overflow-visible transition-all duration-300">
+              <defs>
+              {renderPattern()}
+                <linearGradient id="roofGradient2_front" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor={cf_1} /><stop offset="100%" stopColor={cf_2} />
+                </linearGradient>
+              </defs>
+              {(() => {
+                const frontHouseW = lScale;
+                const frontX = 50 - frontHouseW / 2;
+                const frontHouseH = 30;
+                const frontY = 90 - frontHouseH;
+                const roofTopY = Math.max(frontY - ((w / 2 + O) * Math.tan(pitch * Math.PI / 180) * scale), 10);
+                const frontRoofW = frontHouseW + OScale * 2;
+                const O_val = OScale;
+                const rX1 = frontX - O_val;
+                const rX2 = frontX + frontHouseW + O_val;
+
+                return (
+                  <g className="animate-in fade-in zoom-in-95 duration-300">
+                    <rect x={frontX} y={frontY} width={frontHouseW} height={frontHouseH} fill="#cbd5e1" stroke="#94a3b8" />
+                    
+                    <text x="50" y="96" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{l.toFixed(1)}m</text>
+                    <path d={`M${frontX},92 L${frontX+frontHouseW},92 M${frontX},91 L${frontX},93 M${frontX+frontHouseW},91 L${frontX+frontHouseW},93`} stroke="#94a3b8" strokeWidth="0.5" fill="none" />
+                    
+                    <path d={`M${rX1},50 L${rX1},${roofTopY - 5} M${rX2},50 L${rX2},${roofTopY - 5}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-300" />
+                    <text x="50" y={roofTopY - 7} fill="#fe6a34" fontSize="3.5" fontWeight="bold" textAnchor="middle">{(l + overhang * 2).toFixed(1)}m</text>
+                    <path d={`M${rX1},${roofTopY - 5} L${rX2},${roofTopY - 5} M${rX1},${roofTopY - 6} L${rX1},${roofTopY - 4} M${rX2},${roofTopY - 6} L${rX2},${roofTopY - 4}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-300" />
+                    
+                    {shape === 'gable' && (
+                      <RoofPolygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2},${roofTopY} ${rX1},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                    )}
+                    {shape === 'hip' && (() => {
+                      const pullIn = Math.min(((eRun + O) * scale), frontRoofW / 2);
+                      return (
+                        <RoofPolygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2 - pullIn},${roofTopY} ${rX1 + pullIn},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      );
+                    })()}
+                    {shape === 'skillion' && (() => {
+                      if (skillionDirection === 'left-to-right') {
+                        // High left, low right (wedge pointing right)
+                        return <RoofPolygon points={`${rX1},${roofTopY} ${rX2},${frontY} ${rX1},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      } else if (skillionDirection === 'right-to-left') {
+                        // High right, low left (wedge pointing left)
+                        return <RoofPolygon points={`${rX1},${frontY} ${rX2},${roofTopY} ${rX2},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      } else {
+                        // Front-to-back flow looks like a flat rectangle from the front
+                        return <RoofPolygon points={`${rX1},${roofTopY} ${rX2},${roofTopY} ${rX2},${frontY} ${rX1},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      }
+                    })()}
+                  </g>
+                );
+              })()}
+            </svg>
+            </div>
+            <div className="h-1/2 relative flex items-center justify-center p-4">
+              <h4 className="absolute top-4 left-4 font-bold text-primary-container text-xs font-sans z-10 flex items-center gap-2">
+                 Side View
+              </h4>
+              <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md overflow-visible transition-all duration-300">
+              <defs>
+              {renderPattern()}
+                <linearGradient id="roofGradient1_side" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor={cs_1} /><stop offset="100%" stopColor={cs_2} />
+                </linearGradient>
+              </defs>
+              {(() => {
+                const sideHouseW = wScale;
+                const sideX = 50 - sideHouseW / 2;
+                const sideHouseH = 30;
+                const sideY = 90 - sideHouseH;
+                const roofTopY = Math.max(sideY - ((w / 2 + O) * Math.tan(pitch * Math.PI / 180) * scale), 10);
+                const sideRoofW = sideHouseW + OScale * 2;
+                const O_val = OScale;
+                const rX1 = sideX - O_val;
+                const rX2 = sideX + sideHouseW + O_val;
+
+                return (
+                  <g className="animate-in fade-in zoom-in-95 duration-300">
+                    <rect x={sideX} y={sideY} width={sideHouseW} height={sideHouseH} fill="#cbd5e1" stroke="#94a3b8" />
+                    
+                    <text x="50" y="96" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{w.toFixed(1)}m</text>
+                    <path d={`M${sideX},92 L${sideX+sideHouseW},92 M${sideX},91 L${sideX},93 M${sideX+sideHouseW},91 L${sideX+sideHouseW},93`} stroke="#94a3b8" strokeWidth="0.5" fill="none" />
+                    
+                    <path d={`M${rX1},50 L${rX1},${roofTopY - 5} M${rX2},50 L${rX2},${roofTopY - 5}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-300" />
+                    <text x="50" y={roofTopY - 7} fill="#fe6a34" fontSize="3.5" fontWeight="bold" textAnchor="middle">{(w + overhang * 2).toFixed(1)}m</text>
+                    <path d={`M${rX1},${roofTopY - 5} L${rX2},${roofTopY - 5} M${rX1},${roofTopY - 6} L${rX1},${roofTopY - 4} M${rX2},${roofTopY - 6} L${rX2},${roofTopY - 4}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-300" />
+                    
+                    {shape === 'gable' && (
+                      <RoofPolygon points={`${rX1},${sideY} ${rX2},${sideY} 50,${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                    )}
+                    {shape === 'hip' && (() => {
+                      const pullInW = Math.min(((sRun + O) * scale), sideRoofW / 2);
+                      return (
+                        <RoofPolygon points={`${rX1},${sideY} ${rX2},${sideY} ${rX2 - pullInW},${roofTopY} ${rX1 + pullInW},${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      );
+                    })()}
+                    {shape === 'skillion' && (() => {
+                      if (skillionDirection === 'front-to-back') {
+                        // High front (left side of SVG), low back (right side)
+                        return <RoofPolygon points={`${rX1},${roofTopY} ${rX2},${sideY} ${rX1},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      } else if (skillionDirection === 'back-to-front') {
+                        // Low front (left side), high back (right side)
+                        return <RoofPolygon points={`${rX1},${sideY} ${rX2},${roofTopY} ${rX2},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      } else {
+                        // side view for left/right flow is a flat rectangle
+                        return <RoofPolygon points={`${rX1},${roofTopY} ${rX2},${roofTopY} ${rX2},${sideY} ${rX1},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      }
+                    })()}
+                  </g>
+                );
+              })()}
+            </svg>
+            </div>
+          </div>
+        )}
+
+        {activeView === 'front' && (
+          <div className="w-full h-full relative flex items-center justify-center p-4">
             <h4 className="absolute top-4 left-4 font-bold text-primary-container text-xs font-sans z-10 flex items-center gap-2">
                Front View
             </h4>
@@ -302,7 +442,7 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
                       <RoofPolygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2},${roofTopY} ${rX1},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                     )}
                     {shape === 'hip' && (() => {
-                      const pullIn = Math.min((sRun * scale), frontRoofW / 2);
+                      const pullIn = Math.min(((eRun + O) * scale), frontRoofW / 2);
                       return (
                         <RoofPolygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2 - pullIn},${roofTopY} ${rX1 + pullIn},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                       );
@@ -324,13 +464,14 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
               })()}
             </svg>
           </div>
+        )}
 
-          {/* Bottom Right: Side View */}
-          <div className="h-1/2 relative flex items-center justify-center p-4">
+        {activeView === 'side' && (
+          <div className="w-full h-full relative flex items-center justify-center p-4">
             <h4 className="absolute top-4 left-4 font-bold text-primary-container text-xs font-sans z-10 flex items-center gap-2">
-               Side View
-            </h4>
-            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md overflow-visible transition-all duration-300">
+                 Side View
+              </h4>
+              <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md overflow-visible transition-all duration-300">
               <defs>
               {renderPattern()}
                 <linearGradient id="roofGradient1_side" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -350,7 +491,7 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
 
                 return (
                   <g className="animate-in fade-in zoom-in-95 duration-300">
-                    <rect x={sideX} y={sideY} width={sideHouseW} height={sideHouseH} fill="#e2e8f0" stroke="#94a3b8" />
+                    <rect x={sideX} y={sideY} width={sideHouseW} height={sideHouseH} fill="#cbd5e1" stroke="#94a3b8" />
                     
                     <text x="50" y="96" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{w.toFixed(1)}m</text>
                     <path d={`M${sideX},92 L${sideX+sideHouseW},92 M${sideX},91 L${sideX},93 M${sideX+sideHouseW},91 L${sideX+sideHouseW},93`} stroke="#94a3b8" strokeWidth="0.5" fill="none" />
@@ -363,7 +504,7 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
                       <RoofPolygon points={`${rX1},${sideY} ${rX2},${sideY} 50,${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                     )}
                     {shape === 'hip' && (() => {
-                      const pullInW = Math.min((eRun * scale), sideRoofW / 2);
+                      const pullInW = Math.min(((sRun + O) * scale), sideRoofW / 2);
                       return (
                         <RoofPolygon points={`${rX1},${sideY} ${rX2},${sideY} ${rX2 - pullInW},${roofTopY} ${rX1 + pullInW},${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                       );
@@ -385,9 +526,10 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
               })()}
             </svg>
           </div>
-        </div>
+        )}
       </div>
     );
+;
   };
 
   return (
