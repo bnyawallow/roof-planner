@@ -45,6 +45,7 @@ const CustomNumberInput = ({ value, onChange, placeholder, step = 0.5, min = 0 }
 
 export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onComplete }) => {
   const [shape, setShape] = useState<RoofShape>('gable');
+  const [skillionDirection, setSkillionDirection] = useState<'right-to-left'|'left-to-right'|'front-to-back'|'back-to-front'>('front-to-back');
   const [length, setLength] = useState<string>('12.5');
   const [width, setWidth] = useState<string>('8.2');
   const [pitch, setPitch] = useState<number>(30);
@@ -89,6 +90,15 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
   const estimatedSheets = Math.ceil(trueSqm / 2.4);
 
   const renderVisualization = () => {
+    const maxBase = Math.max(l, w, 0.1); 
+    const O = overhang;
+    const maxExtent = maxBase + O * 2;
+    const scale = 70 / maxExtent;
+    
+    const lScale = l * scale;
+    const wScale = w * scale;
+    const OScale = O * scale;
+    
     return (
       <div className="w-full flex flex-col md:flex-row h-[400px] md:h-[450px] bg-[#eaeff7] rounded-lg border border-surface-container-high relative overflow-hidden transition-all">
         
@@ -113,75 +123,82 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
               </linearGradient>
             </defs>
             <g className="animate-in fade-in zoom-in-95 duration-300">
-              <rect x="25" y="25" width="50" height="50" fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2" />
-              
-              {/* House dimensions */}
-              <text x="50" y="22" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{l.toFixed(1)}m</text>
-              <path d="M25,23.5 L75,23.5 M25,22.5 L25,24.5 M75,22.5 L75,24.5" stroke="#94a3b8" strokeWidth="0.5" fill="none" />
-              
-              <text x="22" y="50" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle" transform="rotate(-90 22,50)">{w.toFixed(1)}m</text>
-              <path d="M23.5,25 L23.5,75 M22.5,25 L24.5,25 M22.5,75 L24.5,75" stroke="#94a3b8" strokeWidth="0.5" fill="none" />
-
               {(() => {
-                 const S = 1 + (overhang * 0.05);
-                 const rMin = 50 - 35 * S;
-                 const rMax = 50 + 35 * S;
+                 const houseW = lScale;
+                 const houseH = wScale;
+                 const houseX = 50 - houseW / 2;
+                 const houseY = 50 - houseH / 2;
+                 
+                 const roofX1 = houseX - OScale;
+                 const roofX2 = houseX + houseW + OScale;
+                 const roofY1 = houseY - OScale;
+                 const roofY2 = houseY + houseH + OScale;
+                 
                  return (
                    <>
-                     {/* Extension lines for roof length */}
-                     <path d={`M${rMin},${rMin} L${rMin},4 M${rMax},${rMin} L${rMax},4`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-500" />
-                     <text x="50" y="2" fill="#fe6a34" fontSize="3.5" fontWeight="bold" textAnchor="middle">{(l + overhang * 2).toFixed(1)}m</text>
-                     <path d={`M${rMin},5 L${rMax},5 M${rMin},4 L${rMin},6 M${rMax},4 L${rMax},6`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-500" />
+                     {shape === 'gable' && (
+                       <>
+                         <polygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${roofX2},50 ${roofX1},50`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="0.5" />
+                         <polygon points={`${roofX1},50 ${roofX2},50 ${roofX2},${roofY2} ${roofX1},${roofY2}`} fill="url(#roofGradient2)" stroke="#fe6a34" strokeWidth="0.5" />
+                         <line x1={roofX1} y1="50" x2={roofX2} y2="50" stroke="#fe6a34" strokeWidth="1.5" />
+                       </>
+                     )}
                      
-                     {/* Extension lines for roof width */}
-                     <path d={`M${rMin},${rMin} L4,${rMin} M${rMin},${rMax} L4,${rMax}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-500" />
-                     <text x="2" y="50" fill="#fe6a34" fontSize="3.5" fontWeight="bold" textAnchor="middle" transform="rotate(-90 2,50)">{(w + overhang * 2).toFixed(1)}m</text>
-                     <path d={`M5,${rMin} L5,${rMax} M4,${rMin} L6,${rMin} M4,${rMax} L6,${rMax}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-500" />
+                     {shape === 'hip' && (() => {
+                       const er = Math.min(eRun * scale, houseW / 2 + OScale);
+                       const sr = Math.min(sRun * scale, houseH / 2 + OScale);
+                       
+                       const rx1 = Math.min(roofX1 + er, 50);
+                       const rx2 = Math.max(roofX2 - er, 50);
+                       const ry1 = Math.min(roofY1 + sr, 50);
+                       const ry2 = Math.max(roofY2 - sr, 50);
+
+                       return (
+                         <>
+                           <polygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${rx2},${ry1} ${rx1},${ry1}`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="0.5" />
+                           <polygon points={`${roofX1},${roofY2} ${roofX2},${roofY2} ${rx2},${ry2} ${rx1},${ry2}`} fill="url(#roofGradient2)" stroke="#fe6a34" strokeWidth="0.5" />
+                           <polygon points={`${roofX1},${roofY1} ${rx1},${ry1} ${rx1},${ry2} ${roofX1},${roofY2}`} fill="url(#roofGradient3)" stroke="#fe6a34" strokeWidth="0.5" />
+                           <polygon points={`${roofX2},${roofY1} ${rx2},${ry1} ${rx2},${ry2} ${roofX2},${roofY2}`} fill="url(#roofGradient3)" stroke="#fe6a34" strokeWidth="0.5" />
+                           <line x1={rx1} y1={ry1} x2={rx2} y2={ry1} stroke="#fe6a34" strokeWidth="1" />
+                           {ry1 !== ry2 && <line x1={rx1} y1={ry2} x2={rx2} y2={ry2} stroke="#fe6a34" strokeWidth="1" />}
+                           {ry1 !== ry2 && <line x1={rx1} y1={ry1} x2={rx1} y2={ry2} stroke="#fe6a34" strokeWidth="1" />}
+                           {ry1 !== ry2 && <line x1={rx2} y1={ry1} x2={rx2} y2={ry2} stroke="#fe6a34" strokeWidth="1" />}
+                         </>
+                       );
+                     })()}
+
+                     {shape === 'skillion' && (() => {
+                        return (
+                          <>
+                            <polygon points={`${roofX1},${roofY1} ${roofX2},${roofY1} ${roofX2},${roofY2} ${roofX1},${roofY2}`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="1" />
+                            {skillionDirection === 'front-to-back' && <path d="M50,30 L50,70 M45,65 L50,70 L55,65" fill="none" stroke="#fe6a34" strokeWidth="2" strokeOpacity="0.7" />}
+                            {skillionDirection === 'back-to-front' && <path d="M50,70 L50,30 M45,35 L50,30 L55,35" fill="none" stroke="#fe6a34" strokeWidth="2" strokeOpacity="0.7" />}
+                            {skillionDirection === 'left-to-right' && <path d="M30,50 L70,50 M65,45 L70,50 L65,55" fill="none" stroke="#fe6a34" strokeWidth="2" strokeOpacity="0.7" />}
+                            {skillionDirection === 'right-to-left' && <path d="M70,50 L30,50 M35,45 L30,50 L35,55" fill="none" stroke="#fe6a34" strokeWidth="2" strokeOpacity="0.7" />}
+                          </>
+                        );
+                     })()}
+
+                     {/* WALL OUTLINE */}
+                     <rect x={houseX} y={houseY} width={houseW} height={houseH} fill="none" stroke="#ffffff" strokeWidth="1.5" strokeDasharray="2,2" opacity="0.8" />
+                     
+                     {/* DIMENSIONS */}
+                     <text x="50" y={houseY - 2} fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{l.toFixed(1)}m</text>
+                     <path d={`M${houseX},${houseY - 1} L${houseX+houseW},${houseY - 1} M${houseX},${houseY - 2} L${houseX},${houseY} M${houseX+houseW},${houseY - 2} L${houseX+houseW},${houseY}`} stroke="#94a3b8" strokeWidth="0.5" fill="none" />
+                     
+                     <text x={houseX - 2} y="50" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle" transform={`rotate(-90 ${houseX - 2}, 50)`}>{w.toFixed(1)}m</text>
+                     <path d={`M${houseX - 1},${houseY} L${houseX - 1},${houseY+houseH} M${houseX - 2},${houseY} L${houseX},${houseY} M${houseX - 2},${houseY+houseH} L${houseX},${houseY+houseH}`} stroke="#94a3b8" strokeWidth="0.5" fill="none" />
+                     
+                     <path d={`M${roofX1},${roofX1} L${roofX1},${roofY1 - 5} M${roofX2},${roofX1} L${roofX2},${roofY1 - 5}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-500" />
+                     <text x="50" y={roofY1 - 6} fill="#fe6a34" fontSize="3.5" fontWeight="bold" textAnchor="middle">{(l + overhang * 2).toFixed(1)}m</text>
+                     <path d={`M${roofX1},${roofY1 - 4} L${roofX2},${roofY1 - 4} M${roofX1},${roofY1 - 5} L${roofX1},${roofY1 - 3} M${roofX2},${roofY1 - 5} L${roofX2},${roofY1 - 3}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-500" />
+                     
+                     <path d={`M${roofX1},${roofY1} L${roofX1 - 5},${roofY1} M${roofX1},${roofY2} L${roofX1 - 5},${roofY2}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-500" />
+                     <text x={roofX1 - 6} y="50" fill="#fe6a34" fontSize="3.5" fontWeight="bold" textAnchor="middle" transform={`rotate(-90 ${roofX1 - 6},50)`}>{(w + overhang * 2).toFixed(1)}m</text>
+                     <path d={`M${roofX1 - 4},${roofY1} L${roofX1 - 4},${roofY2} M${roofX1 - 5},${roofY1} L${roofX1 - 3},${roofY1} M${roofX1 - 5},${roofY2} L${roofX1 - 3},${roofY2}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-500" />
                    </>
                  );
-              })()}
-
-              <g transform={`scale(${1 + (overhang * 0.05)})`} transformOrigin="50 50" className="transition-transform duration-500">
-                {shape === 'gable' && (
-                  <>
-                    <polygon points="15,15 85,15 85,50 15,50" fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="0.5" />
-                    <polygon points="15,50 85,50 85,85 15,85" fill="url(#roofGradient2)" stroke="#fe6a34" strokeWidth="0.5" />
-                    <line x1="15" y1="50" x2="85" y2="50" stroke="#fe6a34" strokeWidth="1.5" />
-                  </>
-                )}
-                
-                {shape === 'hip' && (() => {
-                  const rx1 = 15 + 70 * (sRun / l);
-                  const rx2 = 85 - 70 * (sRun / l);
-                  const ry = 15 + 70 * (eRun / w);
-                  const ry2_actual = 85 - 70 * (eRun / w);
-                  
-                  const safeRx1 = Math.min(rx1, 50);
-                  const safeRx2 = Math.max(rx2, 50);
-                  const safeRy = Math.min(ry, 50);
-                  const ry2 = Math.max(ry2_actual, 50);
-                  
-                  return (
-                  <>
-                    <polygon points={`15,15 85,15 ${safeRx2},${safeRy} ${safeRx1},${safeRy}`} fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="0.5" />
-                    <polygon points={`15,85 85,85 ${safeRx2},${ry2} ${safeRx1},${ry2}`} fill="url(#roofGradient2)" stroke="#fe6a34" strokeWidth="0.5" />
-                    <polygon points={`15,15 ${safeRx1},${safeRy} ${safeRx1},${ry2} 15,85`} fill="url(#roofGradient3)" stroke="#fe6a34" strokeWidth="0.5" />
-                    <polygon points={`85,15 ${safeRx2},${safeRy} ${safeRx2},${ry2} 85,85`} fill="url(#roofGradient3)" stroke="#fe6a34" strokeWidth="0.5" />
-                    <line x1={safeRx1} y1={safeRy} x2={safeRx2} y2={safeRy} stroke="#fe6a34" strokeWidth="1" />
-                    {(safeRy !== ry2) && <line x1={safeRx1} y1={ry2} x2={safeRx2} y2={ry2} stroke="#fe6a34" strokeWidth="1" />}
-                    {(safeRy !== ry2) && <line x1={safeRx1} y1={safeRy} x2={safeRx1} y2={ry2} stroke="#fe6a34" strokeWidth="1" />}
-                    {(safeRy !== ry2) && <line x1={safeRx2} y1={safeRy} x2={safeRx2} y2={ry2} stroke="#fe6a34" strokeWidth="1" />}
-                  </>
-                  );
-                })()}
-
-                {shape === 'skillion' && (
-                  <>
-                    <polygon points="15,15 85,15 85,85 15,85" fill="url(#roofGradient1)" stroke="#fe6a34" strokeWidth="1" />
-                    <path d="M50,30 L50,70 M45,65 L50,70 L55,65" fill="none" stroke="#fe6a34" strokeWidth="2" strokeOpacity="0.7" />
-                  </>
-                )}
-              </g>
+               })()}
             </g>
            </svg>
         </div>
@@ -202,40 +219,48 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                 </linearGradient>
               </defs>
               {(() => {
-                const lengthScale = 70 / Math.max(l, 0.1);
-                const O = overhang * lengthScale;
-                const frontRoofH = Math.min(((w / 2 + overhang) * Math.tan(pitch * Math.PI / 180)) * lengthScale, 35) || 15;
-                const roofTopY = 50 - frontRoofH;
+                const frontHouseW = lScale;
+                const frontX = 50 - frontHouseW / 2;
+                const frontHouseH = 30;
+                const frontY = 90 - frontHouseH;
+                const roofTopY = Math.max(frontY - ((w / 2 + O) * Math.tan(pitch * Math.PI / 180) * scale), 10);
+                const frontRoofW = frontHouseW + OScale * 2;
+                const O_val = OScale;
+                const rX1 = frontX - O_val;
+                const rX2 = frontX + frontHouseW + O_val;
+
                 return (
                   <g className="animate-in fade-in zoom-in-95 duration-300">
-                    <rect x="15" y="50" width="70" height="35" fill="#cbd5e1" stroke="#94a3b8" />
+                    <rect x={frontX} y={frontY} width={frontHouseW} height={frontHouseH} fill="#cbd5e1" stroke="#94a3b8" />
                     
-                    {/* Window and Door */}
-                    <rect x="22" y="60" width="15" height="15" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="0.5" />
-                    <rect x="52" y="60" width="16" height="25" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="0.5" />
-                    <line x1="52" y1="72" x2="68" y2="72" stroke="#94a3b8" strokeWidth="0.5" />
+                    <text x="50" y="96" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{l.toFixed(1)}m</text>
+                    <path d={`M${frontX},92 L${frontX+frontHouseW},92 M${frontX},91 L${frontX},93 M${frontX+frontHouseW},91 L${frontX+frontHouseW},93`} stroke="#94a3b8" strokeWidth="0.5" fill="none" />
                     
-                    {/* House dimension */}
-                    <text x="50" y="93" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{l.toFixed(1)}m</text>
-                    <path d="M15,89 L85,89 M15,88 L15,90 M85,88 L85,90" stroke="#94a3b8" strokeWidth="0.5" fill="none" />
-                    
-                    {/* Roof dimension */}
-                    <path d={`M${15 - O},50 L${15 - O},${roofTopY - 5} M${85 + O},50 L${85 + O},${roofTopY - 5}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-300" />
+                    <path d={`M${rX1},50 L${rX1},${roofTopY - 5} M${rX2},50 L${rX2},${roofTopY - 5}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-300" />
                     <text x="50" y={roofTopY - 7} fill="#fe6a34" fontSize="3.5" fontWeight="bold" textAnchor="middle">{(l + overhang * 2).toFixed(1)}m</text>
-                    <path d={`M${15 - O},${roofTopY - 5} L${85 + O},${roofTopY - 5} M${15 - O},${roofTopY - 6} L${15 - O},${roofTopY - 4} M${85 + O},${roofTopY - 6} L${85 + O},${roofTopY - 4}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-300" />
+                    <path d={`M${rX1},${roofTopY - 5} L${rX2},${roofTopY - 5} M${rX1},${roofTopY - 6} L${rX1},${roofTopY - 4} M${rX2},${roofTopY - 6} L${rX2},${roofTopY - 4}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-300" />
                     
                     {shape === 'gable' && (
-                      <polygon points={`${15-O},50 ${85+O},50 ${85+O},${50-frontRoofH} ${15-O},${50-frontRoofH}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      <polygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2},${roofTopY} ${rX1},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                     )}
                     {shape === 'hip' && (() => {
-                      const pullIn = Math.min((sRun / l) * 70, 35);
+                      const pullIn = Math.min((sRun * scale), frontRoofW / 2);
                       return (
-                        <polygon points={`${15-O},50 ${85+O},50 ${85-pullIn},${50-frontRoofH} ${15+pullIn},${50-frontRoofH}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                        <polygon points={`${rX1},${frontY} ${rX2},${frontY} ${rX2 - pullIn},${roofTopY} ${rX1 + pullIn},${roofTopY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
                       );
                     })()}
-                    {shape === 'skillion' && (
-                      <polygon points={`${15-O},50 ${85+O},50 ${85+O},${50-frontRoofH} ${15-O},${50-frontRoofH}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
-                    )}
+                    {shape === 'skillion' && (() => {
+                      if (skillionDirection === 'left-to-right') {
+                        // High left, low right (wedge pointing right)
+                        return <polygon points={`${rX1},${roofTopY} ${rX2},${frontY} ${rX1},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      } else if (skillionDirection === 'right-to-left') {
+                        // High right, low left (wedge pointing left)
+                        return <polygon points={`${rX1},${frontY} ${rX2},${roofTopY} ${rX2},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      } else {
+                        // Front-to-back flow looks like a flat rectangle from the front
+                        return <polygon points={`${rX1},${roofTopY} ${rX2},${roofTopY} ${rX2},${frontY} ${rX1},${frontY}`} fill="url(#roofGradient2_front)" stroke="#fe6a34" strokeWidth="0.5" />
+                      }
+                    })()}
                   </g>
                 );
               })()}
@@ -255,38 +280,48 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                 </linearGradient>
               </defs>
               {(() => {
-                const widthScale = 60 / Math.max(w, 0.1);
-                const O = overhang * widthScale;
-                const sideRoofH = Math.min(((w / 2 + overhang) * Math.tan(pitch * Math.PI / 180)) * widthScale, 35) || 15;
-                const roofTopY = 50 - sideRoofH;
+                const sideHouseW = wScale;
+                const sideX = 50 - sideHouseW / 2;
+                const sideHouseH = 30;
+                const sideY = 90 - sideHouseH;
+                const roofTopY = Math.max(sideY - ((w / 2 + O) * Math.tan(pitch * Math.PI / 180) * scale), 10);
+                const sideRoofW = sideHouseW + OScale * 2;
+                const O_val = OScale;
+                const rX1 = sideX - O_val;
+                const rX2 = sideX + sideHouseW + O_val;
+
                 return (
                   <g className="animate-in fade-in zoom-in-95 duration-300">
-                    <rect x="20" y="50" width="60" height="35" fill="#e2e8f0" stroke="#94a3b8" />
+                    <rect x={sideX} y={sideY} width={sideHouseW} height={sideHouseH} fill="#e2e8f0" stroke="#94a3b8" />
                     
-                    {/* Window only */}
-                    <rect x="42" y="60" width="16" height="15" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="0.5" />
+                    <text x="50" y="96" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{w.toFixed(1)}m</text>
+                    <path d={`M${sideX},92 L${sideX+sideHouseW},92 M${sideX},91 L${sideX},93 M${sideX+sideHouseW},91 L${sideX+sideHouseW},93`} stroke="#94a3b8" strokeWidth="0.5" fill="none" />
                     
-                    {/* House dimension */}
-                    <text x="50" y="93" fill="#475569" fontSize="3.5" fontWeight="bold" textAnchor="middle">{w.toFixed(1)}m</text>
-                    <path d="M20,89 L80,89 M20,88 L20,90 M80,88 L80,90" stroke="#94a3b8" strokeWidth="0.5" fill="none" />
-                    
-                    {/* Roof dimension */}
-                    <path d={`M${20 - O},50 L${20 - O},${roofTopY - 5} M${80 + O},50 L${80 + O},${roofTopY - 5}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-300" />
+                    <path d={`M${rX1},50 L${rX1},${roofTopY - 5} M${rX2},50 L${rX2},${roofTopY - 5}`} stroke="#fe6a34" strokeWidth="0.25" strokeDasharray="1,1" fill="none" className="transition-all duration-300" />
                     <text x="50" y={roofTopY - 7} fill="#fe6a34" fontSize="3.5" fontWeight="bold" textAnchor="middle">{(w + overhang * 2).toFixed(1)}m</text>
-                    <path d={`M${20 - O},${roofTopY - 5} L${80 + O},${roofTopY - 5} M${20 - O},${roofTopY - 6} L${20 - O},${roofTopY - 4} M${80 + O},${roofTopY - 6} L${80 + O},${roofTopY - 4}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-300" />
+                    <path d={`M${rX1},${roofTopY - 5} L${rX2},${roofTopY - 5} M${rX1},${roofTopY - 6} L${rX1},${roofTopY - 4} M${rX2},${roofTopY - 6} L${rX2},${roofTopY - 4}`} stroke="#fe6a34" strokeWidth="0.5" fill="none" className="transition-all duration-300" />
                     
                     {shape === 'gable' && (
-                      <polygon points={`${20-O},50 ${80+O},50 50,${50-sideRoofH}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      <polygon points={`${rX1},${sideY} ${rX2},${sideY} 50,${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                     )}
                     {shape === 'hip' && (() => {
-                      const pullInW = Math.min((eRun / w) * 60, 30);
+                      const pullInW = Math.min((eRun * scale), sideRoofW / 2);
                       return (
-                        <polygon points={`${20-O},50 ${80+O},50 ${80-pullInW},${50-sideRoofH} ${20+pullInW},${50-sideRoofH}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                        <polygon points={`${rX1},${sideY} ${rX2},${sideY} ${rX2 - pullInW},${roofTopY} ${rX1 + pullInW},${roofTopY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
                       );
                     })()}
-                    {shape === 'skillion' && (
-                      <polygon points={`${20-O},50 ${80+O},${50-sideRoofH} ${20-O},50`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
-                    )}
+                    {shape === 'skillion' && (() => {
+                      if (skillionDirection === 'front-to-back') {
+                        // High front (left side of SVG), low back (right side)
+                        return <polygon points={`${rX1},${roofTopY} ${rX2},${sideY} ${rX1},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      } else if (skillionDirection === 'back-to-front') {
+                        // Low front (left side), high back (right side)
+                        return <polygon points={`${rX1},${sideY} ${rX2},${roofTopY} ${rX2},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      } else {
+                        // side view for left/right flow is a flat rectangle
+                        return <polygon points={`${rX1},${roofTopY} ${rX2},${roofTopY} ${rX2},${sideY} ${rX1},${sideY}`} fill="url(#roofGradient1_side)" stroke="#fe6a34" strokeWidth="0.5" />
+                      }
+                    })()}
                   </g>
                 );
               })()}
@@ -359,11 +394,36 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                     </button>
                   ))}
                 </div>
+                {shape === 'skillion' && (
+                  <div className="mb-10 ani-fade-in">
+                    <label className="block tech-label text-on-surface-variant mb-4">Slope Direction</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {([
+                        { id: 'front-to-back', label: 'Front to Back', icon: '↑' },
+                        { id: 'back-to-front', label: 'Back to Front', icon: '↓' },
+                        { id: 'left-to-right', label: 'Left to Right', icon: '→' },
+                        { id: 'right-to-left', label: 'Right to Left', icon: '←' }
+                      ] as const).map(dir => (
+                        <button
+                          key={dir.id}
+                          onClick={() => setSkillionDirection(dir.id)}
+                          className={cn(
+                            "py-3 px-2 rounded-md font-sans text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2",
+                            skillionDirection === dir.id ? "bg-secondary-container text-white shadow-sm" : "bg-surface-container hover:bg-surface-container-high text-on-surface"
+                          )}
+                        >
+                          <span className="text-lg leading-none">{dir.icon}</span>
+                          {dir.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </>
             )}
 
             <h3 className="tech-label text-on-surface-variant mb-6 text-lg">{isAdvancedMode ? '2. Base Measurements' : 'Base Measurements'}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-8 mb-8", !isAdvancedMode && "lg:grid-cols-3")}>
               <div className="space-y-2">
                 <label className="block tech-label text-on-surface-variant">House Length (Meters)</label>
                 <CustomNumberInput 
@@ -384,6 +444,18 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, onC
                   min={1}
                 />
               </div>
+              {!isAdvancedMode && (
+                <div className="space-y-2">
+                  <label className="block tech-label text-on-surface-variant">Eaves Overhang (Meters)</label>
+                  <CustomNumberInput 
+                    value={overhang}
+                    onChange={(val: any) => setOverhang(Number(val))}
+                    placeholder="0.6"
+                    step={0.1}
+                    min={0}
+                  />
+                </div>
+              )}
             </div>
 
             {isAdvancedMode && (
