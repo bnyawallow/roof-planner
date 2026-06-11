@@ -2,7 +2,6 @@ import boxProfileImg from './assets/images/box_profile.png';
 import classicTileImg from './assets/images/classic_tile.png';
 import corrugatedSheetImg from './assets/images/corrugated_sheet.png';
 import ecospanTileImg from './assets/images/ecospan_mabati.png';
-import britonTileImg from './assets/images/briton_tile.png';
 
 export interface RoofingProfile {
   id: string;
@@ -48,13 +47,6 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     description: "Modern roofing with a unique design, cost-effective and durable solution for contemporary builds.",
     image: ecospanTileImg,
     category: "Pinnacle Builders"
-  },
-  {
-    id: "briton-tile",
-    title: "Briton Tile",
-    description: "A classic aesthetic with high strength, perfectly suited for Kenyan architectural heritage.",
-    image: britonTileImg,
-    category: "Pinnacle"
   },
   {
     id: "stone-coated-shingles",
