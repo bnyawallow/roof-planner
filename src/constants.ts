@@ -1,8 +1,3 @@
-import boxProfileImg from './assets/images/box_profile.png';
-import classicTileImg from './assets/images/classic_tile.png';
-import corrugatedSheetImg from './assets/images/corrugated_sheet.png';
-import ecospanTileImg from './assets/images/ecospan_mabati.png';
-
 export interface RoofingProfile {
   id: string;
   title: string;
@@ -20,7 +15,7 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     id: "box-profile",
     title: "Box Profile",
     description: "High-precision angular ribs for superior load-bearing capacity.",
-    image: boxProfileImg,
+    image: "/profiles/box/charcoal.png",
     category: "Pinnacle",
     specs: {
       effectiveWidth: "880mm",
@@ -31,28 +26,28 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     id: "classic-tile",
     title: "Classic Tile",
     description: "Architectural elegance of traditional tiles with the durability of lightweight steel.",
-    image: classicTileImg,
+    image: "/profiles/classic/charcoal.png",
     category: "Pinnacle"
   },
   {
     id: "corrugated-sheets",
     title: "Corrugated Sheet",
     description: "The classic, time-tested waveform for optimal drainage.",
-    image: corrugatedSheetImg,
+    image: "/profiles/corrugated/charcoal.png",
     category: "Colored"
   },
   {
     id: "ecospan-tile",
     title: "EcoSpan Tile",
     description: "Modern roofing with a unique design, cost-effective and durable solution for contemporary builds.",
-    image: ecospanTileImg,
+    image: "/profiles/ecospan/charcoal.jpg",
     category: "Pinnacle Builders"
   },
   {
     id: "stone-coated-shingles",
     title: "Stone Coated Shingles",
     description: "Premium, extremely durable with a natural stone look. The ultimate choice for longevity.",
-    image: "/images/stone_shingles.png",
+    image: "/profiles/stone/charcoal.png",
     category: "Pinnacle"
   }
 ];

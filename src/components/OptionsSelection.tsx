@@ -14,6 +14,31 @@ interface OptionsSelectionProps {
   onBack: () => void;
 }
 
+
+const getProfileColorImage = (profileId: string, colorId: string) => {
+  let folder = '';
+  switch (profileId) {
+    case 'box-profile': folder = 'box'; break;
+    case 'classic-tile': folder = 'classic'; break;
+    case 'corrugated-sheets': folder = 'corrugated'; break;
+    case 'ecospan-tile': folder = 'ecospan'; break;
+    case 'stone-coated-shingles': folder = 'stone'; break;
+    default: return null;
+  }
+
+  let colorStr = '';
+  switch (colorId) {
+    case 'charcoal': colorStr = 'charcoal'; break;
+    case 'tile-red': colorStr = 'red'; break;
+    case 'chocolate': colorStr = 'chocolate'; break;
+    case 'dark-green': colorStr = 'green'; break;
+    default: colorStr = colorId;
+  }
+
+  const ext = profileId === 'ecospan-tile' ? 'jpg' : 'png';
+  return `/profiles/${folder}/${colorStr}.${ext}`;
+};
+
 export const OptionsSelection: React.FC<OptionsSelectionProps> = ({
   selectedProfile,
   selectedColor,
@@ -68,62 +93,22 @@ export const OptionsSelection: React.FC<OptionsSelectionProps> = ({
 
             {/* Simulated 3D Roofing Sheet Card with interactive Finish Effects */}
             <div className="relative rounded-xl overflow-hidden bg-slate-100 aspect-[16/10] sm:aspect-[16/9] border border-surface-container-high shadow-xl group">
-              {/* Profile Image Base - Converted to grayscale and contrast boosted for optimal coloring base */}
               <img 
-                src={selectedProfile.image} 
-                alt={selectedProfile.title} 
-                className="w-full h-full object-cover select-none transition-transform duration-500 ease-out grayscale contrast-125 brightness-110"
+                src={getProfileColorImage(selectedProfile.id, selectedColor.id) || selectedProfile.image} 
+                alt={`${selectedColor.name} ${selectedProfile.title}`} 
+                className="w-full h-full object-cover select-none transition-transform duration-500 ease-out group-hover:scale-105"
                 referrerPolicy="no-referrer"
               />
-
-              {/* Fundamental Color overlay: Maps the hue to the grayscale midtones */}
-              <div 
-                className="absolute inset-0 transition-colors duration-700 ease-in-out pointer-events-none"
-                style={{ 
-                  backgroundColor: selectedColor.hex, 
-                  mixBlendMode: 'color', 
-                  opacity: 0.9
-                }}
-              />
-
-              {/* Richness and Contrast overlay: Deepens the color in shadows, boosts light highlights */}
-              <div 
-                className="absolute inset-0 transition-colors duration-700 ease-in-out pointer-events-none"
-                style={{ 
-                  backgroundColor: selectedColor.hex, 
-                  mixBlendMode: 'overlay', 
-                  opacity: selectedColor.id === 'charcoal' ? 0.3 : 0.65 
-                }}
-              />
-
-              {/* Multi-clad Burn filter for deeper shades like chocolate and dark green to look richer instead of flat */}
-              {selectedColor.id !== 'charcoal' && (
-                <div 
-                  className="absolute inset-0 transition-colors duration-700 ease-in-out pointer-events-none"
-                  style={{ 
-                    backgroundColor: selectedColor.hex, 
-                    mixBlendMode: 'color-burn', 
-                    opacity: 0.15 
-                  }}
-                />
-              )}
 
               {/* Dynamic finish layer effects */}
               {selectedFinish.id === 'gloss' ? (
                 <>
-                  {/* Gloss Sun Flare Highlight */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-white/60 pointer-events-none mix-blend-overlay transition-opacity duration-300" />
-                  {/* High sheen white diagonal specular shine */}
-                  <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 via-transparent to-transparent pointer-events-none blur-sm" />
-                  {/* Linear gloss sweep effect */}
-                  <div className="absolute -inset-y-12 -inset-x-20 bg-gradient-to-r from-transparent via-white/10 to-transparent rotate-12 pointer-events-none animate-[pulse_6s_infinite] mix-blend-color-dodge transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30 pointer-events-none mix-blend-overlay opacity-80 transition-opacity duration-300" />
+                  <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 via-transparent to-transparent pointer-events-none blur-sm" />
                 </>
               ) : (
                 <>
-                  {/* Textured Matte diffuse soft highlight */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none transition-opacity duration-300" />
-                  {/* Granular noise feel simulation */}
-                  <div className="absolute inset-0 bg-black/10 opacity-30 pointer-events-none mix-blend-overlay" />
+                  <div className="absolute inset-0 bg-black/10 opacity-15 pointer-events-none mix-blend-overlay" />
                 </>
               )}
 
