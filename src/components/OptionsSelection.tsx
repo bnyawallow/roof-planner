@@ -4,6 +4,7 @@ import { CheckCircle2, ArrowRight, ShieldCheck, Paintbrush, Sparkles } from 'luc
 import { RoofingProfile, COLOR_OPTIONS, ColorOption, FINISH_OPTIONS, FinishOption } from '../constants';
 import { ImageWithLoader } from './ImageWithLoader';
 import { cn } from '../lib/utils';
+import { getImage } from '../lib/images';
 
 interface OptionsSelectionProps {
   selectedProfile: RoofingProfile;
@@ -37,10 +38,10 @@ const getProfileColorImage = (profileId: string, colorId: string) => {
   }
 
   const ext = profileId === 'ecospan-tile' ? 'jpg' : 'png';
-  return `/images/profiles/${folder}/${colorStr}.${ext}`;
+  return getImage(`/profiles/${folder}/${colorStr}.${ext}`);
 };
 
-export const OptionsSelection: React.FC<OptionsSelectionProps> = ({
+export const OptionsSelection: React.FC<OptionsSelectionProps> = React.memo(({
   selectedProfile,
   selectedColor,
   selectedFinish,
@@ -302,4 +303,4 @@ export const OptionsSelection: React.FC<OptionsSelectionProps> = ({
       </div>
     </div>
   );
-};
+});

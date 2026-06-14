@@ -45,7 +45,7 @@ const CustomNumberInput = ({ value, onChange, placeholder, step = 0.5, min = 0 }
   );
 };
 
-export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, selectedColor, selectedFinish, onComplete }) => {
+export const Measurements: React.FC<MeasurementsProps> = React.memo(({ selectedProfile, selectedColor, selectedFinish, onComplete }) => {
   const [shape, setShape] = useState<RoofShape>('gable');
   const [skillionDirection, setSkillionDirection] = useState<'right-to-left'|'left-to-right'|'front-to-back'|'back-to-front'>('front-to-back');
   const [length, setLength] = useState<string>('12.5');
@@ -839,6 +839,4 @@ export const Measurements: React.FC<MeasurementsProps> = ({ selectedProfile, sel
       </div>
     </div>
   );
-};
-
-
+});

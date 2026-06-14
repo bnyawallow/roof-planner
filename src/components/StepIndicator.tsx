@@ -10,7 +10,7 @@ interface StepIndicatorProps {
   measurementData: boolean;
 }
 
-export const StepIndicator: React.FC<StepIndicatorProps> = ({ 
+export const StepIndicator: React.FC<StepIndicatorProps> = React.memo(({ 
   currentPage, 
   onNavigate,
   selectedProfile,
@@ -87,4 +87,4 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
       </div>
     </div>
   );
-};
+});

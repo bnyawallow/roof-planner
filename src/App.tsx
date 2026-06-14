@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { StepIndicator } from './components/StepIndicator';
@@ -22,29 +22,29 @@ export default function App() {
   const [selectedFinish, setSelectedFinish] = useState<FinishOption>(FINISH_OPTIONS[0]);
   const [measurementData, setMeasurementData] = useState<any>(null);
 
-  const handleNavigate = (page: string) => {
+  const handleNavigate = useCallback((page: string) => {
     setCurrentPage(page as Page);
     window.scrollTo(0, 0);
-  };
+  }, []);
 
-  const handleProfileSelect = (profile: RoofingProfile) => {
+  const handleProfileSelect = useCallback((profile: RoofingProfile) => {
     setSelectedProfile(profile);
     if (profile.id === 'stone-coated-shingles') {
       setSelectedFinish(FINISH_OPTIONS[0]); // Force matte
     }
     setCurrentPage('options');
     window.scrollTo(0, 0);
-  };
+  }, []);
 
-  const handleColorSelect = (color: ColorOption) => {
+  const handleColorSelect = useCallback((color: ColorOption) => {
     setSelectedColor(color);
-  };
+  }, []);
 
-  const handleMeasurementsComplete = (data: any) => {
+  const handleMeasurementsComplete = useCallback((data: any) => {
     setMeasurementData(data);
     setCurrentPage('summary');
     window.scrollTo(0, 0);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">

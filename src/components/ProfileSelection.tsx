@@ -8,7 +8,7 @@ interface ProfileSelectionProps {
   onSelect: (profile: RoofingProfile) => void;
 }
 
-export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) => {
+export const ProfileSelection: React.FC<ProfileSelectionProps> = React.memo(({ onSelect }) => {
   return (
     <div className="pb-32 px-6 max-w-screen-2xl mx-auto min-h-screen">
       <header className="mb-16">
@@ -57,4 +57,4 @@ export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) 
       </div>
     </div>
   );
-};
+});

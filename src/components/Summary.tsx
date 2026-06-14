@@ -1,3 +1,4 @@
+import { getImage } from "../lib/images";
 import React from 'react';
 import { MessageSquare, FileText, Building2, Hammer, ArrowRight } from 'lucide-react';
 import { RoofingProfile, ColorOption, FinishOption } from '../constants';
@@ -18,7 +19,7 @@ interface SummaryProps {
   };
 }
 
-export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }) => {
+export const Summary: React.FC<SummaryProps> = React.memo(({ profile, color, finish, data }) => {
   const generatePDF = async () => {
     const doc = new jsPDF();
     const timestamp = new Date().toLocaleString();
@@ -517,5 +518,4 @@ export const Summary: React.FC<SummaryProps> = ({ profile, color, finish, data }
       </div>
     </div>
   );
-};
-
+});
