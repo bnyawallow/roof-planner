@@ -1,4 +1,4 @@
-import { getImage } from "../lib/images";
+
 import React from 'react';
 import { MessageSquare, FileText, Building2, Hammer, ArrowRight } from 'lucide-react';
 import { RoofingProfile, ColorOption, FinishOption } from '../constants';
@@ -117,7 +117,7 @@ export const Summary: React.FC<SummaryProps> = React.memo(({ profile, color, fin
 
     // 2. HEADER - LOGO & BRAND INFO
     try {
-      const logoData = await loadImage('/images/logo.png');
+      const logoData = await loadImage('/logo.png');
       doc.addImage(logoData, 'PNG', 14, 15, 34, 12);
     } catch (e) {
       console.error("Failed to load logo for PDF", e);
