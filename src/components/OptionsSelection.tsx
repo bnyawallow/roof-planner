@@ -36,7 +36,7 @@ const getProfileColorImage = (profileId: string, colorId: string) => {
   }
 
   const ext = profileId === 'ecospan-tile' ? 'jpg' : 'png';
-  return `/profiles/${folder}/${colorStr}.${ext}`;
+  return `/images/profiles/${folder}/${colorStr}.${ext}`;
 };
 
 export const OptionsSelection: React.FC<OptionsSelectionProps> = ({

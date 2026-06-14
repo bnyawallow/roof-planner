@@ -15,7 +15,7 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     id: "box-profile",
     title: "Box Profile",
     description: "High-precision angular ribs for superior load-bearing capacity.",
-    image: "/profiles/box/charcoal.png",
+    image: "/images/profiles/box/charcoal.png",
     category: "Pinnacle",
     specs: {
       effectiveWidth: "880mm",
@@ -26,28 +26,28 @@ export const ROOFING_PROFILES: RoofingProfile[] = [
     id: "classic-tile",
     title: "Classic Tile",
     description: "Architectural elegance of traditional tiles with the durability of lightweight steel.",
-    image: "/profiles/classic/charcoal.png",
+    image: "/images/profiles/classic/charcoal.png",
     category: "Pinnacle"
   },
   {
     id: "corrugated-sheets",
     title: "Corrugated Sheet",
     description: "The classic, time-tested waveform for optimal drainage.",
-    image: "/profiles/corrugated/charcoal.png",
+    image: "/images/profiles/corrugated/charcoal.png",
     category: "Colored"
   },
   {
     id: "ecospan-tile",
     title: "EcoSpan Tile",
     description: "Modern roofing with a unique design, cost-effective and durable solution for contemporary builds.",
-    image: "/profiles/ecospan/charcoal.jpg",
+    image: "/images/profiles/ecospan/charcoal.jpg",
     category: "Pinnacle Builders"
   },
   {
     id: "stone-coated-shingles",
     title: "Stone Coated Shingles",
     description: "Premium, extremely durable with a natural stone look. The ultimate choice for longevity.",
-    image: "/profiles/stone/charcoal.png",
+    image: "/images/profiles/stone/charcoal.png",
     category: "Pinnacle"
   }
 ];
