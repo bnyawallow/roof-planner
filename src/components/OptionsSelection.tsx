@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { CheckCircle2, ArrowRight, ShieldCheck, Paintbrush, Sparkles } from 'lucide-react';
 import { RoofingProfile, COLOR_OPTIONS, ColorOption, FINISH_OPTIONS, FinishOption } from '../constants';
+import { ImageWithLoader } from './ImageWithLoader';
 import { cn } from '../lib/utils';
 
 interface OptionsSelectionProps {
@@ -93,7 +94,8 @@ export const OptionsSelection: React.FC<OptionsSelectionProps> = ({
 
             {/* Simulated 3D Roofing Sheet Card with interactive Finish Effects */}
             <div className="relative rounded-xl overflow-hidden bg-slate-100 aspect-[16/10] sm:aspect-[16/9] border border-surface-container-high shadow-xl group">
-              <img 
+              <ImageWithLoader 
+                containerClassName="absolute inset-0"
                 src={getProfileColorImage(selectedProfile.id, selectedColor.id) || selectedProfile.image} 
                 alt={`${selectedColor.name} ${selectedProfile.title}`} 
                 className="w-full h-full object-cover select-none transition-transform duration-500 ease-out group-hover:scale-105"

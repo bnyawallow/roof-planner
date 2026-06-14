@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, MessageSquare } from 'lucide-react';
 import { ROOFING_PROFILES, RoofingProfile } from '../constants';
+import { ImageWithLoader } from './ImageWithLoader';
 
 interface ProfileSelectionProps {
   onSelect: (profile: RoofingProfile) => void;
@@ -30,13 +31,14 @@ export const ProfileSelection: React.FC<ProfileSelectionProps> = ({ onSelect }) 
             className="group relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-ambient hover:bg-surface-container-low transition-all duration-500 cursor-pointer flex flex-col h-full"
           >
             <div className="relative h-64 overflow-hidden">
-              <img 
+              <ImageWithLoader 
+                containerClassName="absolute inset-0"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
                 src={profile.image}
                 alt={profile.title}
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary-container/80 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-container/80 to-transparent pointer-events-none"></div>
               <div className="absolute bottom-4 left-6">
                 <h3 className="text-white text-2xl font-black font-headline leading-tight tracking-[-0.02em]">{profile.title}</h3>
               </div>
